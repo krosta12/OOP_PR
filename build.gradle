@@ -54,3 +54,13 @@ jlink {
 jlinkZip {
   group = 'distribution'
 }
+
+java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(22))
+  }
+}
+
+application {
+  mainClass.set("HelloApplication") // Update this with your actual main class
+}
