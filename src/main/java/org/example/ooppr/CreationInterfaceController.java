@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -41,8 +42,7 @@ public class CreationInterfaceController {
 
                 // getting controller, canvas sizing
                 ProductController productController = loader.getController();
-                productController.setCanvasSize(XResolution, YResolution);
-
+                productController.initializeCanvas(XResolution, YResolution, Color.rgb(255, 0, 0));
                 scene = new Scene(root);
                 stage.setScene(scene);
                 stage.show();

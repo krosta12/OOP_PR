@@ -12,15 +12,25 @@ public class ProductController {
     @FXML
     public Canvas paintingZone;
 
-    public void setCanvasSize( int XResolution, int YResolution ) {
+    /**
+     * The method puts Canvas size and default color
+     * @param XResolution canvas width
+     * @param YResolution canvas height
+     * @param fillColor canvas default background color
+     */
+    public void initializeCanvas( int XResolution, int YResolution, Color fillColor ) {
         paintingZone.setWidth(XResolution);
         paintingZone.setHeight(YResolution);
-        Platform.runLater(() -> fillCanvasColor());
+        Platform.runLater(() -> fillCanvasColor( fillColor ));
     }
 
-    private void fillCanvasColor() {
+    /**
+     * Thw method puts canvas color
+     * @param fillColor color that needs to be filled
+     */
+    private void fillCanvasColor(Color fillColor) {
         GraphicsContext gc = paintingZone.getGraphicsContext2D();
-        gc.setFill(Color.BLACK);
+        gc.setFill( fillColor );
         gc.fillRect(0, 0, paintingZone.getWidth(), paintingZone.getHeight());
     }
 
