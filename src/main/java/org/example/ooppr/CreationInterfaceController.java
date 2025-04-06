@@ -48,11 +48,11 @@ public class CreationInterfaceController {
                 stage.show();
             } else {
                 // if negative value or 0 then alerts error
-                showAlert("Error", "Resolution Error", "Please enter a valid resolution (positive integer)!)");
+                showAlert("Resolution error", "Wrong resolution!", "Please enter a valid resolution (positive integer).");
             }
         } catch (NumberFormatException e) {
             // If not-numerical value then alerts error
-            showAlert("Error", "Invalid input", "Please input numerical values");
+            showAlert("Input error", "Invalid input!", "Please input numerical values.");
         }
 
     }
