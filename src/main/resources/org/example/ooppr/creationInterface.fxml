@@ -6,84 +6,83 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="174.0" prefWidth="600.0" styleClass="border-pane" stylesheets="@creationInterface.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ooppr.CreationInterfaceController">
-   <right>
-      <VBox maxHeight="1.7976931348623157E308" prefHeight="300.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+<StackPane prefHeight="360.0" prefWidth="640.0" styleClass="border-pane" stylesheets="@creationInterface.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ooppr.CreationInterfaceController">
+      <HBox alignment="CENTER" maxHeight="300.0" maxWidth="600.0" prefHeight="300.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="300.0" prefWidth="200.0">
+            <VBox alignment="CENTER" maxWidth="150.0">
                <children>
-                  <Line endX="100.0" startX="100.0" startY="-180.0">
-                     <HBox.margin>
-                        <Insets right="10.0" />
-                     </HBox.margin>
-                  </Line>
-                  <Button id="ButtonCreateCanvas" mnemonicParsing="false" onAction="#SwitchToPaintPanel" prefHeight="25.0" prefWidth="70.0" text="Create">
-                  </Button>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="labelText" text="FIle properties:  " />
+                        <Line endX="100.0" startX="100.0" startY="-180.0" />
+                     </children>
+                  </HBox>
                </children>
-            </HBox>
-         </children>
-      </VBox>
-   </right>
-   <center>
-      <VBox alignment="CENTER_LEFT" prefHeight="400.0" prefWidth="499.0" BorderPane.alignment="CENTER">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="labelText" text="Document Name">
-               <VBox.margin>
-                  <Insets bottom="5.0" top="5.0" />
-               </VBox.margin>
-            </Text>
-            <HBox alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="500.0">
+            </VBox>
+            <VBox alignment="CENTER_LEFT" prefHeight="390.0" prefWidth="390.0">
                <children>
-                  <TextField id="DocumentNameHolder" promptText="untitled" styleClass="textField" />
-                  <Button id="ButtonSaveDocumentName" mnemonicParsing="false" text="Save">
-                     <HBox.margin>
-                        <Insets left="10.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="labelText" text="Resolution" />
-            <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="349.0">
-               <children>
-                  <TextField id="XResolutionHolder" fx:id="XResolutionHolder" promptText="1280" styleClass="textField" />
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="labelText" text="X">
-                     <HBox.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </HBox.margin>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="labelText" text="Document Name">
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
                   </Text>
-                  <TextField id="YResolutionHolder" fx:id="YResolutionHolder" promptText="720" style="-fx-bacground-color: #E9F7FF;" styleClass="textField" />
+                  <HBox alignment="CENTER_LEFT" maxWidth="390.0" styleClass="hbox-padding">
+                     <children>
+                        <TextField id="DocumentNameHolder" promptText="untitled" styleClass="textField" />
+                        <Button id="ButtonSaveDocumentName" mnemonicParsing="false" text="Save">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="labelText" text="Resolution" />
+                  <HBox alignment="CENTER_LEFT" maxWidth="390.0" styleClass="hbox-padding">
+                     <children>
+                        <TextField id="XResolutionHolder" fx:id="XResolutionHolder" promptText="1280" styleClass="textField" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="labelText" text="X">
+                           <HBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </HBox.margin>
+                        </Text>
+                        <TextField id="YResolutionHolder" fx:id="YResolutionHolder" promptText="720" style="-fx-bacground-color: #E9F7FF;" styleClass="textField" />
+                     </children>
+                  </HBox>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="labelText" text="Canvas standart color">
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Text>
+                  <HBox alignment="CENTER_LEFT" maxWidth="390.0" prefHeight="35.0" styleClass="hbox-padding">
+                     <children>
+                        <ColorPicker id="StandartCanvasColorPicker" fx:id="StandartCanvasColorPicker" />
+                     </children>
+                  </HBox>
                </children>
-            </HBox>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="labelText" text="Canvas standart color">
-               <VBox.margin>
-                  <Insets bottom="5.0" top="5.0" />
-               </VBox.margin>
-            </Text>
-            <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="500.0">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </VBox>
+            <VBox maxHeight="1.7976931348623157E308" prefHeight="300.0" prefWidth="100.0">
                <children>
-                  <ColorPicker id="StandartCanvasColorPicker" fx:id="StandartCanvasColorPicker" />
+                  <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="300.0" prefWidth="200.0">
+                     <children>
+                        <Line endX="100.0" startX="100.0" startY="-180.0">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Line>
+                        <Button id="ButtonCreateCanvas" mnemonicParsing="false" onAction="#SwitchToPaintPanel" text="Create">
+                  </Button>
+                     </children>
+                  </HBox>
                </children>
-            </HBox>
+            </VBox>
          </children>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </VBox>
-   </center>
-   <left>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-         <children>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="labelText" text="FIle properties:  " />
-                  <Line endX="100.0" startX="100.0" startY="-180.0" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-   </left>
-</BorderPane>
+      </HBox>
+</StackPane>
