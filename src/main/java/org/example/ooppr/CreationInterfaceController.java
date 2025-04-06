@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -24,6 +25,9 @@ public class CreationInterfaceController {
     @FXML
     public TextField YResolutionHolder;
 
+    @FXML
+    public ColorPicker StandartCanvasColorPicker;
+
     /**
      * The method switches the scene to Product. Checks the sizes of the passed canvas XResolutionHolder and YResolutionHolder.
      */
@@ -34,6 +38,9 @@ public class CreationInterfaceController {
             int XResolution = Integer.parseInt(XResolutionHolder.getText());
             int YResolution = Integer.parseInt(YResolutionHolder.getText());
 
+            // Getting canvas default color
+            Color defaultColor = StandartCanvasColorPicker.getValue();
+
             if ( resolutionIsValid(XResolution, YResolution) ) {
                 // Loading scene
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("product.fxml"));
@@ -42,7 +49,7 @@ public class CreationInterfaceController {
 
                 // getting controller, canvas sizing
                 ProductController productController = loader.getController();
-                productController.initializeCanvas(XResolution, YResolution, Color.rgb(255, 0, 0));
+                productController.initializeCanvas(XResolution, YResolution, defaultColor);
                 scene = new Scene(root);
                 stage.setScene(scene);
                 stage.show();

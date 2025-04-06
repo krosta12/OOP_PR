@@ -73,7 +73,7 @@
             </Text>
             <HBox prefHeight="35.0" prefWidth="500.0">
                <children>
-                  <ColorPicker id="StandartCanvasColorPicker" style="-fx-background-color: #E0E0E1;" />
+                  <ColorPicker id="StandartCanvasColorPicker" fx:id="StandartCanvasColorPicker" style="-fx-background-color: #E0E0E1;" />
                   <Button id="SaveStandartCanvasColor" mnemonicParsing="false" style="-fx-background-color: #E0E0E1;" text="Use">
                      <HBox.margin>
                         <Insets left="10.0" />
