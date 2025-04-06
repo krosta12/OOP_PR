@@ -10,8 +10,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="174.0" prefWidth="600.0" style="-fx-background-color: #CBD0D8;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="174.0" prefWidth="600.0" style="-fx-background-color: #CBD0D8;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ooppr.SceneController">
    <right>
       <VBox maxHeight="1.7976931348623157E308" prefHeight="300.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
@@ -22,7 +21,7 @@
                         <Insets right="10.0" />
                      </HBox.margin>
                   </Line>
-                  <Button id="ButtonCreateCanvas" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" style="-fx-background-color: #E0E0E1;" text="Create">
+                  <Button id="ButtonCreateCanvas" mnemonicParsing="false" onAction="#SwitchToPaintPanel" prefHeight="25.0" prefWidth="70.0" style="-fx-background-color: #E0E0E1;" text="Create">
                      <HBox.margin>
                         <Insets right="15.0" />
                      </HBox.margin>
