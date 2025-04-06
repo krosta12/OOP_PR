@@ -1,0 +1,37 @@
+.border-pane {
+    -fx-background-color: #1A1A1A;
+}
+
+.button {
+    -fx-background-color: #333333;
+    -fx-font-family: "Arial";
+    -fx-font-size: 16px;
+    -fx-font-width: regular;
+    -fx-text-fill: #D4D4D4;
+    -fx-padding: 10px;
+}
+
+.button:hover {
+    -fx-cursor: hand;
+    -fx-background-color: #4A4A4A;
+}
+
+.hbox {
+    -fx-alignment: CENTER_LEFT;
+}
+
+.labelText {
+    -fx-font-family: "Arial";
+    -fx-font-size: 16px;
+    -fx-font-weight: 500;
+    -fx-fill: #D4D4D4;
+}
+
+.textField {
+    -fx-background-color: #212121;
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+    -fx-font-width: regular;
+    -fx-text-fill: #D4D4D4;
+    -fx-padding: 10px;
+}
