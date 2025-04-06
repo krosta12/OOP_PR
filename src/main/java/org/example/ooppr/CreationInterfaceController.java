@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class SceneController {
+public class CreationInterfaceController {
     private Scene scene;
     private Stage stage;
     private Parent root;
