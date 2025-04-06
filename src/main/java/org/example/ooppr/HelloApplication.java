@@ -11,10 +11,12 @@ public class HelloApplication extends Application {
     public static final String appName = "OPaint";
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("product.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("creationInterface.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 620, 240);
         stage.setTitle(appName);
         stage.setScene(scene);
+//        stage.setTitle(appName + " : Canvas creations");
+//        stage.setResizable(false); for creation Panel
         stage.show();
     }
 
