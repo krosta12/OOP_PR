@@ -49,6 +49,12 @@ public class ProductController {
         paintingZone.setOnMouseReleased(this::handleMouseReleased);
     }
 
+    /**
+     * The method puts Canvas size and default color
+     * @param XResolution canvas width
+     * @param YResolution canvas height
+     * @param fillColor canvas default background color
+     */
     public void initializeCanvas(int XResolution, int YResolution, Color fillColor) {
         paintingZone.setWidth(XResolution);
         paintingZone.setHeight(YResolution);
@@ -58,6 +64,10 @@ public class ProductController {
         this.lastColor = fillColor;
     }
 
+    /**
+     * Thw method puts canvas color
+     * @param fillColor color that needs to be filled
+     */
     private void fillCanvasColor(Color fillColor) {
         GraphicsContext gc = paintingZone.getGraphicsContext2D();
         gc.setFill(fillColor);
