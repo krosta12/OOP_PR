@@ -106,7 +106,7 @@
                <children>
                   <VBox id="ResizeBrushZone" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="400.0" style="-fx-border-color: black;">
                      <children>
-                        <Slider id="ResizeSlider" />
+                        <Slider id="ResizeSlider" onMouseReleased="#handleBrushSizeChange" />
                         <HBox alignment="CENTER" prefHeight="20.0" prefWidth="100.0">
                            <children>
                               <Text id="BrushSize" strokeType="OUTSIDE" strokeWidth="0.0" text="N" />
@@ -118,9 +118,9 @@
                         <Insets left="30.0" />
                      </HBox.margin>
                   </VBox>
-                  <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="300.0" style="-fx-border-color: black;">
+                  <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" onMouseClicked="#setSelectedTool" prefHeight="100.0" prefWidth="300.0" style="-fx-border-color: black;">
                      <children>
-                        <Button id="TakeBrushButton" mnemonicParsing="false">
+                        <Button id="TakeBrushButton" mnemonicParsing="false" onAction="#setSelectedTool">
                            <HBox.margin>
                               <Insets left="5.0" right="5.0" />
                            </HBox.margin>
@@ -144,22 +144,22 @@
                   </HBox>
                   <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="400.0" style="-fx-border-color: black;">
                      <children>
-                        <Button id="TakeBlackColorConst" mnemonicParsing="false" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: black;">
+                        <Button id="TakeBlackColorConst" fx:id="TakeBlackColorConst" mnemonicParsing="false" onAction="#pickColor" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: black;">
                            <HBox.margin>
                               <Insets left="2.0" right="2.0" />
                            </HBox.margin>
                         </Button>
-                        <Button id="TakeWhiteColorConst" mnemonicParsing="false" prefHeight="20.0" prefWidth="50.0">
+                        <Button id="TakeWhiteColorConst" fx:id="TakeWhiteColorConst" mnemonicParsing="false" onAction="#pickColor" prefHeight="20.0" prefWidth="50.0">
                            <HBox.margin>
                               <Insets left="2.0" right="2.0" />
                            </HBox.margin>
                         </Button>
-                        <Button id="TakeLastColorResponsive" mnemonicParsing="false" prefHeight="20.0" prefWidth="50.0">
+                        <Button id="TakeLastColorResponsive" fx:id="TakeLastColorResponsive" mnemonicParsing="false" onAction="#pickColor" prefHeight="20.0" prefWidth="50.0">
                            <HBox.margin>
                               <Insets left="2.0" right="2.0" />
                            </HBox.margin>
                         </Button>
-                        <ColorPicker id="TakeCustomColorPanel" />
+                        <ColorPicker id="TakeCustomColorPanel" fx:id="TakeCustomColorPanel" onAction="#pickColor" />
                      </children>
                      <HBox.margin>
                         <Insets right="20.0" />
