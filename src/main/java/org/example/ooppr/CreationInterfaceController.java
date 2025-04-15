@@ -43,7 +43,7 @@ public class CreationInterfaceController {
 
             if ( resolutionIsValid(XResolution, YResolution) ) {
                 // Loading scene
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("product.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("Product.fxml"));
                 root = loader.load();
                 stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 
