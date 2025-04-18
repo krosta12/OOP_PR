@@ -33,7 +33,6 @@ public class ServerOptionsController {
         stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 
         // getting controller, canvas sizing
-        CreationInterfaceController creationInterfaceController = loader.getController();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
