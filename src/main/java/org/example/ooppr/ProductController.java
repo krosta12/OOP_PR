@@ -6,10 +6,12 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.transform.Scale;
 
 public class ProductController {
     /**
@@ -35,6 +37,10 @@ public class ProductController {
     @FXML
     private ColorPicker TakeCustomColorPanel;
 
+    // ScrollPane
+    @FXML
+    private ScrollPane scrollPane;
+
     //init standart rom nullpointerExcetption
     private char selectedTool = 'b'; //придумаешь лучше - поменяй switch-case
     private Color selectedColor = Color.BLACK;
@@ -43,14 +49,25 @@ public class ProductController {
 
     private double brushSize = 5.0; //slider Text привязать надо
 
+
+    // -- SCALE FUNCTION --
+    private double scaleValue = 1.0;
+    private final double zoomIntencity = 0.02;
+    private final double minScale = 0.2;
+    private final double maxScale = 5.0;
+
+    Scale canvasScale = new Scale(scaleValue, scaleValue, 0, 0);
+
+
     /**
-     * initialize a event handlers components for painting zone
+     * initialize an event handlers components for painting zone
      */
     public void initialize() {
         paintingZone.setOnMousePressed(this::handleMousePressed);
         paintingZone.setOnMouseDragged(this::handleMouseDragged);
         paintingZone.setOnMouseReleased(this::handleMouseReleased);
     }
+
 
     /**
      * The method puts Canvas size and default color
@@ -67,6 +84,7 @@ public class ProductController {
         this.lastColor = fillColor;
     }
 
+
     /**
      * Thw method puts canvas color
      * @param fillColor color that needs to be filled
@@ -76,6 +94,7 @@ public class ProductController {
         gc.setFill(fillColor);
         gc.fillRect(0, 0, paintingZone.getWidth(), paintingZone.getHeight());
     }
+
 
     /**
      *
@@ -118,6 +137,7 @@ public class ProductController {
         }
     }
 
+
     /**
      *
      * @param event SceneBuilder event handler - contains info about target object
@@ -130,6 +150,7 @@ public class ProductController {
 
         drawPoint(event.getX(), event.getY());
     }
+
 
     /**
      *
@@ -146,9 +167,11 @@ public class ProductController {
         prevY = currentY;
     }
 
+
     private void handleMouseReleased(MouseEvent event) {
         // Можно добавить логику при отпускании кнопки мыши но я не знаю зачем оно нам надо
     }
+
 
     /**
      *
@@ -167,6 +190,7 @@ public class ProductController {
             gc.fillOval(x - brushSize/2, y - brushSize/2, brushSize, brushSize);
         }
     }
+
 
     /**
      *
@@ -190,6 +214,7 @@ public class ProductController {
         }
     }
 
+
     /**
      *
      * @param size parameter for setter
@@ -198,6 +223,7 @@ public class ProductController {
     public void setBrushSize(double size) {
         this.brushSize = size;
     }
+
 
     /**
      *
