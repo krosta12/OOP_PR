@@ -1,8 +1,9 @@
-package org.example.ooppr;
+package org.example.ooppr.controllers;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
@@ -11,15 +12,21 @@ import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.transform.Scale;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
+import org.example.ooppr.managers.PaintingZoneManager;
 
-public class ProductController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class ProductController implements Initializable {
     /**
      * Get all var-s from XML
      */
     //get canvas
     @FXML
     public Canvas paintingZone;
+    private double lastX, lastY;
 
     //get brush buttons (need refactor)
     @FXML
@@ -37,37 +44,25 @@ public class ProductController {
     @FXML
     private ColorPicker TakeCustomColorPanel;
 
-    // ScrollPane
-    @FXML
-    private ScrollPane scrollPane;
-
     //init standart rom nullpointerExcetption
     private char selectedTool = 'b'; //придумаешь лучше - поменяй switch-case
     private Color selectedColor = Color.BLACK;
     private Color lastColor = Color.BLACK;
-    private double prevX, prevY;
 
     private double brushSize = 5.0; //slider Text привязать надо
-
-
-    // -- SCALE FUNCTION --
-    private double scaleValue = 1.0;
-    private final double zoomIntencity = 0.02;
-    private final double minScale = 0.2;
-    private final double maxScale = 5.0;
-
-    Scale canvasScale = new Scale(scaleValue, scaleValue, 0, 0);
-
 
     /**
      * initialize an event handlers components for painting zone
      */
-    public void initialize() {
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        PaintingZoneManager paintingZoneManager = new PaintingZoneManager(paintingZone);
+
         paintingZone.setOnMousePressed(this::handleMousePressed);
         paintingZone.setOnMouseDragged(this::handleMouseDragged);
         paintingZone.setOnMouseReleased(this::handleMouseReleased);
-    }
 
+    }
 
     /**
      * The method puts Canvas size and default color
@@ -145,10 +140,9 @@ public class ProductController {
      * will exec drawPoint funtion with new mouse position parametrs
      */
     private void handleMousePressed(MouseEvent event) {
-        prevX = event.getX();
-        prevY = event.getY();
-
-        drawPoint(event.getX(), event.getY());
+        lastX = event.getX();
+        lastY = event.getY();
+        drawPoint(lastX, lastY);
     }
 
 
@@ -160,11 +154,9 @@ public class ProductController {
     private void handleMouseDragged(MouseEvent event) {
         double currentX = event.getX();
         double currentY = event.getY();
-
-        drawLine(prevX, prevY, currentX, currentY); //добавить smooth
-
-        prevX = currentX;
-        prevY = currentY;
+        drawLine(lastX, lastY, currentX, currentY);
+        lastX = currentX;
+        lastY = currentY;
     }
 
 
@@ -202,17 +194,16 @@ public class ProductController {
      */
     private void drawLine(double startX, double startY, double endX, double endY) {
         GraphicsContext gc = paintingZone.getGraphicsContext2D();
-        //WARNING may change draw logic
-        if (selectedTool == 'b') {
-            gc.setStroke(selectedColor);
-            gc.setLineWidth(brushSize);
-            gc.strokeLine(startX, startY, endX, endY);
-        } else if (selectedTool == 'l') {
-            gc.setStroke(Color.WHITE); //WARNING поменять на fillColor
-            gc.setLineWidth(brushSize);
-            gc.strokeLine(startX, startY, endX, endY);
-        }
+        gc.setLineWidth(brushSize);
+        gc.setStroke(selectedColor);
+
+        // Smoothing
+        gc.setLineCap(StrokeLineCap.ROUND);
+        gc.setLineJoin(StrokeLineJoin.ROUND);
+
+        gc.strokeLine(startX, startY, endX, endY);
     }
+
 
 
     /**
