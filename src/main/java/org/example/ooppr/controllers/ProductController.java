@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
+import org.example.ooppr.managers.ColorPickerManager;
 import org.example.ooppr.managers.PaintingZoneManager;
 
 import java.net.URL;
@@ -68,6 +69,14 @@ public class ProductController implements Initializable {
         PaintingZoneManager paintingZoneManager = new PaintingZoneManager(paintingZone, paintingZoneScrollPane);
         paintingZoneManager.setupZooming( paintingZoneScrollPane );
         paintingZoneManager.setupDrawing();
+
+        // Attaching buttons functionality
+        ColorPickerManager colorPickerManager = new ColorPickerManager( paintingZoneManager );
+        colorPickerManager.attachColorToButton(TakeBlackColorConst, Color.BLACK);
+        colorPickerManager.attachColorToButton(TakeWhiteColorConst, Color.WHITE);
+        colorPickerManager.attachColorToButton(TakeBlackColorConst, selectedColor);
+        colorPickerManager.attachColorPicker(TakeCustomColorPanel);
+
     }
 
     /**
@@ -112,31 +121,6 @@ public class ProductController implements Initializable {
         }
     }
 
-
-    /**
-     *
-     * @param event SceneBuilder event handler - contains info about target object
-     * function use if-else logic to change color and save last custom picked color from color picker
-     */
-    @FXML
-    public void pickColor(ActionEvent event) {
-        //WARNING must to recreate it by switch-case construction
-        Object source = event.getSource(); //parse info
-
-        if (source != TakeLastColorResponsive) {
-            lastColor = selectedColor; //if new color was picked - replace to temp var for future
-        }
-
-        if (source == TakeBlackColorConst) { //WARNING need to use DICT
-            selectedColor = Color.BLACK;
-        } else if (source == TakeWhiteColorConst) {
-            selectedColor = Color.WHITE;
-        } else if (source == TakeLastColorResponsive) {
-            selectedColor = lastColor;
-        } else if (source == TakeCustomColorPanel) {
-            selectedColor = TakeCustomColorPanel.getValue(); //get colorData
-        }
-    }
 
     /**
      *

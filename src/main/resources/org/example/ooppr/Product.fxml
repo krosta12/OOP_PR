@@ -147,22 +147,22 @@
                   </HBox>
                   <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="400.0" style="-fx-border-color: black;">
                      <children>
-                        <Button id="TakeBlackColorConst" fx:id="TakeBlackColorConst" mnemonicParsing="false" onAction="#pickColor" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: black;">
+                        <Button id="TakeBlackColorConst" fx:id="TakeBlackColorConst" mnemonicParsing="false" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: black;">
                            <HBox.margin>
                               <Insets left="2.0" right="2.0" />
                            </HBox.margin>
                         </Button>
-                        <Button id="TakeWhiteColorConst" fx:id="TakeWhiteColorConst" mnemonicParsing="false" onAction="#pickColor" prefHeight="20.0" prefWidth="50.0">
+                        <Button id="TakeWhiteColorConst" fx:id="TakeWhiteColorConst" mnemonicParsing="false" prefHeight="20.0" prefWidth="50.0">
                            <HBox.margin>
                               <Insets left="2.0" right="2.0" />
                            </HBox.margin>
                         </Button>
-                        <Button id="TakeLastColorResponsive" fx:id="TakeLastColorResponsive" mnemonicParsing="false" onAction="#pickColor" prefHeight="20.0" prefWidth="50.0">
+                        <Button id="TakeLastColorResponsive" fx:id="TakeLastColorResponsive" mnemonicParsing="false" prefHeight="20.0" prefWidth="50.0">
                            <HBox.margin>
                               <Insets left="2.0" right="2.0" />
                            </HBox.margin>
                         </Button>
-                        <ColorPicker id="TakeCustomColorPanel" fx:id="TakeCustomColorPanel" onAction="#pickColor" />
+                        <ColorPicker id="TakeCustomColorPanel" fx:id="TakeCustomColorPanel" />
                      </children>
                      <HBox.margin>
                         <Insets right="20.0" />

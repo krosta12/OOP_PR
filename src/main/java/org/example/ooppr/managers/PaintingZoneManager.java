@@ -144,6 +144,23 @@ public class PaintingZoneManager {
         gc.strokeLine(startX, startY, endX, endY);
     }
 
+    /**
+     * Set brush size
+     * @param brushSize new brush size
+     */
+    public void setBrushSize(double brushSize) {
+        this.brushSize = brushSize;
+    }
+
+    /**
+     * Set brush color
+     * @param color new color
+     */
+    public void setBrushColor(Color color) {
+        this.selectedColor = color;
+        gc.setFill(selectedColor);
+    }
+
     private void handleMouseReleased(MouseEvent event) {
         // TODO ?
     }
