@@ -152,12 +152,12 @@
                               <Insets left="2.0" right="2.0" />
                            </HBox.margin>
                         </Button>
-                        <Button id="TakeWhiteColorConst" fx:id="TakeWhiteColorConst" mnemonicParsing="false" prefHeight="20.0" prefWidth="50.0">
+                        <Button id="TakeWhiteColorConst" fx:id="TakeWhiteColorConst" style="-fx-background-color: white;" mnemonicParsing="false" prefHeight="20.0" prefWidth="50.0">
                            <HBox.margin>
                               <Insets left="2.0" right="2.0" />
                            </HBox.margin>
                         </Button>
-                        <Button id="TakeLastColorResponsive" fx:id="TakeLastColorResponsive" mnemonicParsing="false" prefHeight="20.0" prefWidth="50.0">
+                        <Button id="TakeLastColorResponsive" fx:id="TakeLastColorResponsive" style="-fx-background-color: black;" mnemonicParsing="false" prefHeight="20.0" prefWidth="50.0">
                            <HBox.margin>
                               <Insets left="2.0" right="2.0" />
                            </HBox.margin>

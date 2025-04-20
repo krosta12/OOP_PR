@@ -13,8 +13,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.StrokeLineJoin;
 import org.example.ooppr.managers.ColorPickerManager;
 import org.example.ooppr.managers.PaintingZoneManager;
 
@@ -54,7 +52,6 @@ public class ProductController implements Initializable {
     //init standart rom nullpointerExcetption
     private char selectedTool = 'b'; //придумаешь лучше - поменяй switch-case
     private Color selectedColor = Color.BLACK;
-    private Color lastColor = Color.BLACK;
 
     private double brushSize = 5.0; //slider Text привязать надо
     private double lastX, lastY;
@@ -72,10 +69,10 @@ public class ProductController implements Initializable {
 
         // Attaching buttons functionality
         ColorPickerManager colorPickerManager = new ColorPickerManager( paintingZoneManager );
-        colorPickerManager.attachColorToButton(TakeBlackColorConst, Color.BLACK);
-        colorPickerManager.attachColorToButton(TakeWhiteColorConst, Color.WHITE);
-        colorPickerManager.attachColorToButton(TakeBlackColorConst, selectedColor);
-        colorPickerManager.attachColorPicker(TakeCustomColorPanel);
+        colorPickerManager.attachConstantColorToButton(TakeBlackColorConst, Color.BLACK);
+        colorPickerManager.attachConstantColorToButton(TakeWhiteColorConst, Color.WHITE);
+        colorPickerManager.attachResponsiveColorToButton(TakeLastColorResponsive);
+        colorPickerManager.attachColorPicker(TakeCustomColorPanel, TakeLastColorResponsive);
 
     }
 
@@ -89,9 +86,6 @@ public class ProductController implements Initializable {
         paintingZone.setWidth(XResolution);
         paintingZone.setHeight(YResolution);
         Platform.runLater(() -> fillCanvasColor(fillColor));
-
-        this.selectedColor = fillColor;
-        this.lastColor = fillColor;
     }
 
 
