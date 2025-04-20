@@ -164,4 +164,8 @@ public class PaintingZoneManager {
     private void handleMouseReleased(MouseEvent event) {
         // TODO ?
     }
+
+    public void setSelectedTool(char t) {
+        selectedTool = t;
+    }
 }

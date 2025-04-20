@@ -13,8 +13,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import org.example.ooppr.managers.ColorPickerManager;
 import org.example.ooppr.managers.PaintingZoneManager;
+import org.example.ooppr.managers.ToolsManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,12 +29,6 @@ public class ProductController implements Initializable {
     @FXML
     public Canvas paintingZone;
 
-    //get brush buttons (need refactor)
-    @FXML
-    private Button takeBrushButton;
-    @FXML
-    private Button takeLastikButton; //WARNING may to create a dict of items
-
     //get color system buttons
     @FXML
     private Button TakeBlackColorConst;
@@ -44,14 +40,19 @@ public class ProductController implements Initializable {
     private ColorPicker TakeCustomColorPanel;
 
     @FXML
-    private ScrollPane paintingZoneScrollPane;
+    private Button TakeBrushButton;
+    @FXML
+    private Button TakeLastikButton;
+    @FXML
+    private Slider brushSizeSlider;
+    @FXML
+    private Text NPixelsText;
 
     @FXML
-    private Pane canvasContainer;
+    private ScrollPane paintingZoneScrollPane;
 
     //init standart rom nullpointerExcetption
     private char selectedTool = 'b'; //придумаешь лучше - поменяй switch-case
-    private Color selectedColor = Color.BLACK;
 
     private double brushSize = 5.0; //slider Text привязать надо
     private double lastX, lastY;
@@ -74,6 +75,11 @@ public class ProductController implements Initializable {
         colorPickerManager.attachResponsiveColorToButton(TakeLastColorResponsive);
         colorPickerManager.attachColorPicker(TakeCustomColorPanel, TakeLastColorResponsive);
 
+        // Tools functionality
+        ToolsManager toolsManager = new ToolsManager( paintingZoneManager );
+        toolsManager.attachButton( TakeBrushButton, 'b' );
+        toolsManager.attachButton( TakeLastikButton, 'l' );
+        toolsManager.attachSlider( brushSizeSlider, NPixelsText );
     }
 
     /**
@@ -97,43 +103,5 @@ public class ProductController implements Initializable {
         GraphicsContext gc = paintingZone.getGraphicsContext2D();
         gc.setFill(fillColor);
         gc.fillRect(0, 0, paintingZone.getWidth(), paintingZone.getHeight());
-    }
-
-
-    /**
-     *
-     * @param event param from SceneBuilder where contains info about target object
-     * function using switch-case logic (now if-else) change a painting tool to smth from dictionary
-     */
-    @FXML
-    public void setSelectedTool(ActionEvent event) {
-        Object source = event.getSource(); //get info about target object
-        if (source == takeBrushButton) { //compare to object
-            selectedTool = 'b';
-        } else if (source == takeLastikButton) {
-            selectedTool = 'l';
-        }
-    }
-
-
-    /**
-     *
-     * @param size parameter for setter
-     * function change brush size var (created for encapsulation)
-     */
-    public void setBrushSize(double size) {
-        this.brushSize = size;
-    }
-
-
-    /**
-     *
-     * @param event MouseEvent event from SceneBuilder lib
-     * function change brush size by private brushSize var
-     */
-    @FXML
-    private void handleBrushSizeChange(MouseEvent event) {
-        Slider slider = (Slider) event.getSource();
-        setBrushSize(slider.getValue());
     }
 }

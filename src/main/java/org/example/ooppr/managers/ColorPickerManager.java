@@ -4,8 +4,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.paint.Color;
 
-import java.sql.SQLOutput;
-
 public class ColorPickerManager {
 
     private final PaintingZoneManager paintingZoneManager;
@@ -28,7 +26,6 @@ public class ColorPickerManager {
     /**
      * Attaching color to button
      * @param button attached button
-     * @param color attached color
      */
     public void attachResponsiveColorToButton(Button button) {
         button.setOnAction(event -> {
