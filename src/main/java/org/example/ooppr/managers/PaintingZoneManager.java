@@ -2,6 +2,7 @@ package org.example.ooppr.managers;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
@@ -20,14 +21,14 @@ public class PaintingZoneManager {
     private Color selectedColor = Color.BLACK;
     private double brushSize = 3;
 
-    public PaintingZoneManager(Canvas canvas) {
+    public PaintingZoneManager(Canvas canvas, ScrollPane scrollPane) {
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
-        setupZooming();
+        setupZooming(scrollPane);
     }
 
-    private void setupZooming() {
-        canvas.setOnScroll( (ScrollEvent event) -> {
+    private void setupZooming(ScrollPane scrollPane) {
+        scrollPane.setOnScroll( (ScrollEvent event) -> {
 
             if( event.isControlDown() ) {
                 double dy = event.getDeltaY();

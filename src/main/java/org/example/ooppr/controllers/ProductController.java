@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
@@ -26,7 +27,6 @@ public class ProductController implements Initializable {
     //get canvas
     @FXML
     public Canvas paintingZone;
-    private double lastX, lastY;
 
     //get brush buttons (need refactor)
     @FXML
@@ -44,19 +44,26 @@ public class ProductController implements Initializable {
     @FXML
     private ColorPicker TakeCustomColorPanel;
 
+    @FXML
+    private ScrollPane paintingZoneScrollPane;
+
+    @FXML
+    private Pane canvasContainer;
+
     //init standart rom nullpointerExcetption
     private char selectedTool = 'b'; //придумаешь лучше - поменяй switch-case
     private Color selectedColor = Color.BLACK;
     private Color lastColor = Color.BLACK;
 
     private double brushSize = 5.0; //slider Text привязать надо
+    private double lastX, lastY;
 
     /**
      * initialize an event handlers components for painting zone
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        PaintingZoneManager paintingZoneManager = new PaintingZoneManager(paintingZone);
+        PaintingZoneManager paintingZoneManager = new PaintingZoneManager(paintingZone, paintingZoneScrollPane);
 
         paintingZone.setOnMousePressed(this::handleMousePressed);
         paintingZone.setOnMouseDragged(this::handleMouseDragged);
@@ -78,7 +85,6 @@ public class ProductController implements Initializable {
         this.selectedColor = fillColor;
         this.lastColor = fillColor;
     }
-
 
     /**
      * Thw method puts canvas color

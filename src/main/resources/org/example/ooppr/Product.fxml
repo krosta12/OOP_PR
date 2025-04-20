@@ -43,12 +43,13 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.Group?>
 <BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400" minWidth="500" prefHeight="400.0" prefWidth="600.0" stylesheets="productInterface.css,commonStyles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ooppr.controllers.ProductController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
@@ -172,14 +173,10 @@
                   <Insets />
                </VBox.margin>
             </HBox>
-            <ScrollPane fx:id="scrollPane" VBox.vgrow="SOMETIMES">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" fx:id="canvasContainer" >
-                     <children>
-                        <Canvas id="paintZone" fx:id="paintingZone" height="501.0" width="501.0" />
-                     </children>
-                  </AnchorPane>
-              </content>
+            <ScrollPane fx:id="paintingZoneScrollPane" VBox.vgrow="ALWAYS">
+               <Group>
+                  <Canvas id="paintZone" fx:id="paintingZone" height="501.0" width="501.0" />
+               </Group>
             </ScrollPane>
          </children>
       </VBox>
