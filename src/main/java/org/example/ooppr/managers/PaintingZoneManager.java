@@ -3,8 +3,11 @@ package org.example.ooppr.managers;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.transform.Scale;
 
 public class PaintingZoneManager {
@@ -20,13 +23,13 @@ public class PaintingZoneManager {
     // -- DRAWING VARIABLES --
     private char selectedTool = 'b';
     private Color selectedColor = Color.BLACK;
-    private double brushSize = 3;
+    private double brushSize = 3.0;
+    private double lastX;
+    private double lastY;
 
     public PaintingZoneManager(Canvas canvas, ScrollPane scrollPane) {
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
-        setupZooming(scrollPane);
-        setupDrawing();
     }
 
     // -- ZOOMING METHODS --
@@ -34,7 +37,7 @@ public class PaintingZoneManager {
      * Sets zooming up
      * @param scrollPane - canvas' parent ScrollPane
      */
-    private void setupZooming(ScrollPane scrollPane) {
+    public void setupZooming(ScrollPane scrollPane) {
         scrollPane.setOnScroll( (ScrollEvent event) -> {
 
             if( event.isControlDown() ) {
@@ -72,6 +75,76 @@ public class PaintingZoneManager {
     /**
      * Sets drawing up
      */
-    private void setupDrawing() {
+    public void setupDrawing() {
+        canvas.setOnMousePressed(this::handleMousePressed);
+        canvas.setOnMouseDragged(this::handleMouseDragged);
+        canvas.setOnMouseReleased(this::handleMouseReleased);
+    }
+
+    /**
+     *
+     * @param event SceneBuilder event handler - contains info about target object
+     * function handle and update muse position when it pressed to use "chain of reponsibility"
+     * will exec drawPoint funtion with new mouse position parametrs
+     */
+    private void handleMousePressed(MouseEvent event) {
+        lastX = event.getX();
+        lastY = event.getY();
+        drawPoint(lastX, lastY);
+    }
+
+    /**
+     *
+     * @param x point coordinat on plane
+     * @param y point coordinat on plane
+     * function draw a oval or cycle on plane by x,y params with resourses
+     */
+    private void drawPoint(double x, double y) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        if (selectedTool == 'b') {
+            gc.setFill(selectedColor);
+            gc.fillOval(x - brushSize/2, y - brushSize/2, brushSize, brushSize);
+        } else if (selectedTool == 'l') {
+            gc.setFill(Color.WHITE); // поменять логику ластика
+            gc.fillOval(x - brushSize/2, y - brushSize/2, brushSize, brushSize);
+        }
+    }
+
+    /**
+     *
+     * @param event SceneBuilder event handler - contains info about target object
+     * function ontroll mouse dragged and update mouse position vars to draw line between 2 points
+     */
+    private void handleMouseDragged(MouseEvent event) {
+        double currentX = event.getX();
+        double currentY = event.getY();
+        drawLine(lastX, lastY, currentX, currentY);
+        lastX = currentX;
+        lastY = currentY;
+    }
+
+    /**
+     *
+     * @param startX start coordinate on plane by X axis
+     * @param startY start coordinate on plane by Y axis
+     * @param endX start coordinate on plane by Y axis
+     * @param endY end coordinate on plane by Y axis
+     * function draw a line on plane by resourses
+     */
+    private void drawLine(double startX, double startY, double endX, double endY) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setLineWidth(brushSize);
+        gc.setStroke(selectedColor);
+
+        // Smoothing
+        gc.setLineCap(StrokeLineCap.ROUND);
+        gc.setLineJoin(StrokeLineJoin.ROUND);
+
+        gc.strokeLine(startX, startY, endX, endY);
+    }
+
+    private void handleMouseReleased(MouseEvent event) {
+        // TODO ?
     }
 }

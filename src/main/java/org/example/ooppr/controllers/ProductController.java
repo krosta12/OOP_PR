@@ -63,12 +63,11 @@ public class ProductController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        // Creating painting zone (canvas) manager, setting functionality up
         PaintingZoneManager paintingZoneManager = new PaintingZoneManager(paintingZone, paintingZoneScrollPane);
-
-        paintingZone.setOnMousePressed(this::handleMousePressed);
-        paintingZone.setOnMouseDragged(this::handleMouseDragged);
-        paintingZone.setOnMouseReleased(this::handleMouseReleased);
-
+        paintingZoneManager.setupZooming( paintingZoneScrollPane );
+        paintingZoneManager.setupDrawing();
     }
 
     /**
@@ -138,80 +137,6 @@ public class ProductController implements Initializable {
             selectedColor = TakeCustomColorPanel.getValue(); //get colorData
         }
     }
-
-
-    /**
-     *
-     * @param event SceneBuilder event handler - contains info about target object
-     * function handle and update muse position when it pressed to use "chain of reponsibility"
-     * will exec drawPoint funtion with new mouse position parametrs
-     */
-    private void handleMousePressed(MouseEvent event) {
-        lastX = event.getX();
-        lastY = event.getY();
-        drawPoint(lastX, lastY);
-    }
-
-
-    /**
-     *
-     * @param event SceneBuilder event handler - contains info about target object
-     * function ontroll mouse dragged and update mouse position vars to draw line between 2 points
-     */
-    private void handleMouseDragged(MouseEvent event) {
-        double currentX = event.getX();
-        double currentY = event.getY();
-        drawLine(lastX, lastY, currentX, currentY);
-        lastX = currentX;
-        lastY = currentY;
-    }
-
-
-    private void handleMouseReleased(MouseEvent event) {
-        // Можно добавить логику при отпускании кнопки мыши но я не знаю зачем оно нам надо
-    }
-
-
-    /**
-     *
-     * @param x point coordinat on plane
-     * @param y point coordinat on plane
-     * function draw a oval or cycle on plane by x,y params with resourses
-     */
-    private void drawPoint(double x, double y) {
-        GraphicsContext gc = paintingZone.getGraphicsContext2D();
-
-        if (selectedTool == 'b') {
-            gc.setFill(selectedColor);
-            gc.fillOval(x - brushSize/2, y - brushSize/2, brushSize, brushSize);
-        } else if (selectedTool == 'l') {
-            gc.setFill(Color.WHITE); // поменять логику ластика
-            gc.fillOval(x - brushSize/2, y - brushSize/2, brushSize, brushSize);
-        }
-    }
-
-
-    /**
-     *
-     * @param startX start coordinate on plane by X axis
-     * @param startY start coordinate on plane by Y axis
-     * @param endX start coordinate on plane by Y axis
-     * @param endY end coordinate on plane by Y axis
-     * function draw a line on plane by resourses
-     */
-    private void drawLine(double startX, double startY, double endX, double endY) {
-        GraphicsContext gc = paintingZone.getGraphicsContext2D();
-        gc.setLineWidth(brushSize);
-        gc.setStroke(selectedColor);
-
-        // Smoothing
-        gc.setLineCap(StrokeLineCap.ROUND);
-        gc.setLineJoin(StrokeLineJoin.ROUND);
-
-        gc.strokeLine(startX, startY, endX, endY);
-    }
-
-
 
     /**
      *
