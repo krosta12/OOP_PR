@@ -11,12 +11,13 @@ public class PaintingZoneManager {
     private final Canvas canvas;
     private final GraphicsContext gc;
 
-    // SCROLLING
+    // -- ZOOMING VARIABLES --
     private double zoomFactor = 1.0;
     private final double zoomStep = 0.1;
     private final double minZoom = 0.2;
     private final double maxZoom = 3.0;
 
+    // -- DRAWING VARIABLES --
     private char selectedTool = 'b';
     private Color selectedColor = Color.BLACK;
     private double brushSize = 3;
@@ -25,8 +26,14 @@ public class PaintingZoneManager {
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
         setupZooming(scrollPane);
+        setupDrawing();
     }
 
+    // -- ZOOMING METHODS --
+    /**
+     * Sets zooming up
+     * @param scrollPane - canvas' parent ScrollPane
+     */
     private void setupZooming(ScrollPane scrollPane) {
         scrollPane.setOnScroll( (ScrollEvent event) -> {
 
@@ -44,17 +51,27 @@ public class PaintingZoneManager {
         });
     }
 
+    /**
+     * Method applies zoom changes
+     */
     private void applyZoom() {
         canvas.getTransforms().clear();
         canvas.getTransforms().add( new Scale( zoomFactor, zoomFactor, 0, 0 ) );
     }
 
-    public double getZoomFactor() {
-        return zoomFactor;
-    }
-
+    /**
+     * Resets zoom
+     */
     public void resetZoom() {
         zoomFactor = 1.0;
         applyZoom();
+    }
+
+    // -- DRAWING METHODS --
+
+    /**
+     * Sets drawing up
+     */
+    private void setupDrawing() {
     }
 }

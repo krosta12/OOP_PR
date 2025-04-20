@@ -86,6 +86,7 @@ public class ProductController implements Initializable {
         this.lastColor = fillColor;
     }
 
+
     /**
      * Thw method puts canvas color
      * @param fillColor color that needs to be filled
