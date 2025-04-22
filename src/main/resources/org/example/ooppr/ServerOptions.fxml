@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="245.0" minWidth="350.0" prefHeight="352.0" prefWidth="350.0" styleClass="grid-pane" stylesheets="@creationInterfaceV2.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ooppr.CreationInterfaceController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="245.0" minWidth="350.0" prefHeight="352.0" prefWidth="350.0" styleClass="grid-pane" stylesheets="@creationInterfaceV2.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ooppr.ServerOptionsController">
    <columnConstraints>
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
    </columnConstraints>
@@ -29,7 +29,7 @@
       <Line endX="200.0" startX="-100.0" styleClass="line" GridPane.valignment="BOTTOM" />
       <VBox alignment="CENTER" prefHeight="262.0" prefWidth="350.0" GridPane.rowIndex="1">
          <children>
-            <Button id="ButtonHostServer" maxWidth="177.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="145.0" text="HOST">
+            <Button id="ButtonHostServer" maxWidth="177.0" mnemonicParsing="false" onAction="#host" prefHeight="63.0" prefWidth="145.0" text="HOST">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
@@ -40,7 +40,7 @@
             <HBox alignment="CENTER" maxWidth="390.0" styleClass="hbox-padding" />
             <Separator prefHeight="20.0" prefWidth="200.0" visible="false" />
             <Separator prefHeight="10.0" prefWidth="200.0" visible="false" />
-            <Button id="ButtonJoinServer" maxWidth="177.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="145.0" text="JOIN" />
+            <Button id="ButtonJoinServer" maxWidth="177.0" mnemonicParsing="false" onAction="#join" prefHeight="63.0" prefWidth="145.0" text="JOIN" />
          </children>
       </VBox>
    </children>
