@@ -1,4 +1,4 @@
-package org.example.ooppr;
+package org.example.ooppr.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -43,7 +43,7 @@ public class CreationInterfaceController {
 
             if ( resolutionIsValid(XResolution, YResolution) ) {
                 // Loading scene
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("Product.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/ooppr/Product.fxml"));
                 root = loader.load();
                 stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 
