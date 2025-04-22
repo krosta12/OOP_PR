@@ -1,42 +1,39 @@
 package org.example.ooppr.controllers;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import javafx.event.ActionEvent;
+import org.example.ooppr.Server.Server;
 
 import java.io.IOException;
 
 public class ServerOptionsController {
+    // Создание сервера на порту 1234
+    final Server server = new Server(1234);
 
-    private Scene scene;
-    private Stage stage;
-    private Parent root;
+    // Метод, вызываемый при нажатии на кнопку "Host"
+    public void host(ActionEvent event) {
+        // Запускаем сервер в отдельном потоке, чтобы не блокировать JavaFX UI
+        new Thread(server::start_host).start();
 
-    @FXML
-    public Button ButtonJoinServer;
+        try {
+            // Загружаем новую сцену из FXML
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/ooppr/CreationInterfaceV2.fxml"));
+            Parent root = fxmlLoader.load();
 
-    @FXML
-    public Button ButtonHostServer;
+            // Получаем текущий Stage и меняем корневой элемент сцены
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.getScene().setRoot(root);
 
-    /**
-     * Switching to CreationInterface
-     */
-    public void SwitchToJoin(ActionEvent event) throws IOException {
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("CreationInterfaceV2.fxml"));
-        root = loader.load();
-        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-
-        // getting controller, canvas sizing
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+    public void join() {
+        System.out.println("join");
+    }
 }

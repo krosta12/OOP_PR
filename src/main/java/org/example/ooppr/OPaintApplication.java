@@ -13,7 +13,7 @@ public class OPaintApplication extends Application {
     public void start(Stage stage) throws IOException {
         //FXMLLoader fxmlLoader = new FXMLLoader(OPaintApplication.class.getResource("ServerOptions.fxml"));
         //Scene scene = new Scene(fxmlLoader.load(), 350, 500);
-        FXMLLoader fxmlLoader = new FXMLLoader(OPaintApplication.class.getResource("CreationInterfaceV2.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(OPaintApplication.class.getResource("ServerOptions.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 350, 500);
         stage.setTitle(appName);
         stage.setScene(scene);
