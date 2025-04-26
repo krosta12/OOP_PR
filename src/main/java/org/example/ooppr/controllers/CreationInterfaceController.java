@@ -11,10 +11,15 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.ooppr.Server.Client;
+import org.example.ooppr.Server.Server;
 
 import java.io.IOException;
 
 public class CreationInterfaceController {
+
+    private String connectionType; //host or join
+
     private Scene scene;
     private Stage stage;
     private Parent root;
@@ -28,12 +33,28 @@ public class CreationInterfaceController {
     @FXML
     public ColorPicker StandartCanvasColorPicker;
 
+    @FXML
+    public TextField ipHolder;
+
     /**
      * The method switches the scene to Product. Checks the sizes of the passed canvas XResolutionHolder and YResolutionHolder.
      */
     public void SwitchToPaintPanel(ActionEvent event) throws IOException {
-
         try {
+            if (connectionType.equals("host")) {
+                final Server server = new Server(1234);
+                new Thread(server::start_host).start();
+            } else if (connectionType.equals("join")) {
+                String ipAddress = ipHolder.getText();
+                if (ipAddress == null || ipAddress.isEmpty()) {
+                    showAlert("IP error", "No IP entered", "Please enter the server IP address.");
+                    return;
+                }
+
+                final Client client = new Client(ipAddress, 1234); // вот здесь создаем КЛИЕНТА
+            }
+
+
             // Getting canvas resolution
             int XResolution = Integer.parseInt(XResolutionHolder.getText());
             int YResolution = Integer.parseInt(YResolutionHolder.getText());
@@ -41,28 +62,25 @@ public class CreationInterfaceController {
             // Getting canvas default color
             Color defaultColor = StandartCanvasColorPicker.getValue();
 
-            if ( resolutionIsValid(XResolution, YResolution) ) {
-                // Loading scene
+            if (resolutionIsValid(XResolution, YResolution)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/ooppr/Product.fxml"));
                 root = loader.load();
-                stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-                // getting controller, canvas sizing
                 ProductController productController = loader.getController();
                 productController.initializeCanvas(XResolution, YResolution, defaultColor);
+
                 scene = new Scene(root);
                 stage.setScene(scene);
                 stage.show();
             } else {
-                // if negative value or 0 then alerts error
-                showAlert("Resolution error", "Wrong resolution!", "Please enter a valid resolution (positive integer).");
+                showAlert("Resolution error", "Wrong resolution!", "Please eter a valid resolution (positive integer).");
             }
         } catch (NumberFormatException e) {
-            // If not-numerical value then alerts error
-            showAlert("Input error", "Invalid input!", "Please input numerical values.");
+            showAlert("Input error", "Invalid input!", "Please input integer values.");
         }
-
     }
+
 
     /**
      * The method checks the validity of the canvas size
@@ -88,4 +106,7 @@ public class CreationInterfaceController {
         alert.showAndWait();
     }
 
+    public void setConnectionType(String join) {
+        connectionType = join;
+    }
 }
