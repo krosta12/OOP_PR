@@ -7,24 +7,21 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import org.example.ooppr.Server.Server;
+import org.example.ooppr.controllers.CreationInterfaceController;
 
 import java.io.IOException;
 
 public class ServerOptionsController {
-    // Создание сервера на порту 1234
-    final Server server = new Server(1234);
-
-    // Метод, вызываемый при нажатии на кнопку "Host"
+    // Метод, вызываемый при нажатии на кнопку "Host" + УБРАТЬ active флагв из IP инпута, вероятно переменить на порт
     public void host(ActionEvent event) {
-        // Запускаем сервер в отдельном потоке, чтобы не блокировать JavaFX UI
-        new Thread(server::start_host).start();
-
         try {
-            // Загружаем новую сцену из FXML
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/ooppr/CreationInterfaceV2.fxml"));
             Parent root = fxmlLoader.load();
 
-            // Получаем текущий Stage и меняем корневой элемент сцены
+            // Получаем контроллер
+            CreationInterfaceController controller = fxmlLoader.getController();
+            controller.setConnectionType("host"); // Передаем "host"
+
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.getScene().setRoot(root);
 
@@ -33,7 +30,22 @@ public class ServerOptionsController {
         }
     }
 
-    public void join() {
-        System.out.println("join");
+    public void join(ActionEvent event) { // меняем join() чтобы он тоже принимал ActionEvent
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/ooppr/CreationInterfaceV2.fxml"));
+            Parent root = fxmlLoader.load();
+
+            // Получаем контроллер
+            CreationInterfaceController controller = fxmlLoader.getController();
+            controller.setConnectionType("join"); // Передаем "join"
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.getScene().setRoot(root);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+
 }

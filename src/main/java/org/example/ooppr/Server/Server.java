@@ -27,18 +27,20 @@ public class Server {
      */
     public void start_host() {
         //TWR try to open port
+//        ServerSocket serverSocket = new ServerSocket(this.port, 0, InetAddress.getByName("192.168.1.5")); if we have a server on this IP
+
         try (ServerSocket serverSocket = new ServerSocket(this.port)) {
             //setFlag
             isStarted = true;
             //log
-            System.out.println("Сервер запущен на порту " + port);
+            System.out.println("server started at " + InetAddress.getLocalHost().getHostAddress() + ":" + port);
 
             //when it works will handle a new clients
             while (isStarted) {
                 //get
                 Socket socket = serverSocket.accept();
                 //log
-                System.out.println("Новый клиент подключен: " + socket.getRemoteSocketAddress());
+                System.out.println("new client connected: " + socket.getRemoteSocketAddress());
 
                 //create a client and create for him a new Thread
                 ClientHandler handler = new ClientHandler(socket);
@@ -64,20 +66,21 @@ public class Server {
 
         public void run() {
             ObjectOutputStream out = null;
-            try (
-                    ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            ) {
+            ObjectInputStream in = null;
+            try {
                 out = new ObjectOutputStream(socket.getOutputStream());
+                in = new ObjectInputStream(socket.getInputStream());
+
                 clientStreams.add(out);
+                System.out.println("Новый клиент подключен: " + socket.getRemoteSocketAddress());
 
                 Object obj;
                 while ((obj = in.readObject()) != null) {
                     if (obj instanceof Data data) {
-                        System.out.println("Получена Data от клинта: x=" + data.getX() + ", y=" + data.getY());
+                        System.out.println("Получена Data от клиента: x=" + data.getX() + ", y=" + data.getY());
                         broadcast(data);
                     }
                 }
-
             } catch (IOException | ClassNotFoundException e) {
                 System.out.println("Клиент отключился: " + e.getMessage());
             } finally {
@@ -88,12 +91,15 @@ public class Server {
                     } catch (IOException ignored) {}
                 }
                 try {
+                    if (in != null) {
+                        in.close();
+                    }
                     socket.close();
                 } catch (IOException ignored) {}
             }
         }
-
     }
+
 
     /**
      *
@@ -108,6 +114,16 @@ public class Server {
             } catch (IOException e) {
                 System.out.println("Ошибка при отправке клиенту: " + e.getMessage());
             }
+        }
+    }
+
+
+    public void connectToHost(String ip, int port){
+        try {
+            Socket socket = new Socket(ip, port);
+            System.out.println("Подключен к серверу: " + ip + ":" + port);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
