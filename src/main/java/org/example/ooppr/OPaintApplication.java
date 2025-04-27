@@ -11,7 +11,9 @@ public class OPaintApplication extends Application {
     public static final String appName = "OPaint";
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(OPaintApplication.class.getResource("creationInterfaceV2.fxml"));
+        //FXMLLoader fxmlLoader = new FXMLLoader(OPaintApplication.class.getResource("ServerOptions.fxml"));
+        //Scene scene = new Scene(fxmlLoader.load(), 350, 500);
+        FXMLLoader fxmlLoader = new FXMLLoader(OPaintApplication.class.getResource("ServerOptions.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 350, 500);
         stage.setTitle(appName);
         stage.setScene(scene);
