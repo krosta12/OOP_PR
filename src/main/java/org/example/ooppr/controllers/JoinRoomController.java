@@ -19,6 +19,7 @@ import java.io.IOException;
 
 public class JoinRoomController {
 
+    public TextField Nickname;
     private Scene scene;
     private Stage stage;
     private Parent root;

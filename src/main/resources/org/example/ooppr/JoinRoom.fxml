@@ -33,10 +33,14 @@
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
          <children>
             <Label alignment="CENTER" text="Host (e.g. 127.0.0.1)" />
-            <Separator prefHeight="10.0" prefWidth="200.0" visible="false" />
-            <TextField fx:id="ipHolder" maxWidth="200.0" styleClass="textField" />
+             <Separator prefHeight="10.0" prefWidth="200.0" visible="false" />
+             <TextField fx:id="ipHolder" maxWidth="200.0" styleClass="textField" />
             <Separator prefHeight="20.0" prefWidth="200.0" visible="false" />
-            <Label alignment="CENTER" text="Resolution" />
+             <Label alignment="CENTER" text="Choose nickname:" />
+             <Separator prefHeight="10.0" prefWidth="200.0" visible="false" />
+             <TextField fx:id="Nickname" maxWidth="200.0" styleClass="textField" />
+             <Separator prefHeight="20.0" prefWidth="200.0" visible="false" />
+             <Label alignment="CENTER" text="Resolution" />
             <Separator prefHeight="10.0" prefWidth="200.0" visible="false" />
              <HBox alignment="CENTER" maxWidth="390.0" styleClass="hbox-padding">
                  <TextField id="XResolutionHolder" fx:id="XResolutionHolder" maxWidth="120.0" promptText="1280" styleClass="textField" />
@@ -53,6 +57,6 @@
             <ColorPicker fx:id="StandartCanvasColorPicker" />
          </children>
       </VBox>
-      <Button id="ButtonCreateCanvas" maxWidth="100.0" mnemonicParsing="false" onAction="#SwitchToPaintPanel" text="LOGIN" GridPane.rowIndex="2" />
+      <Button id="ButtonCreateCanvas" maxWidth="100.0" mnemonicParsing="false" onAction="#SwitchToPaintPanel" text="JOIN" GridPane.rowIndex="2" />
    </children>
 </GridPane>

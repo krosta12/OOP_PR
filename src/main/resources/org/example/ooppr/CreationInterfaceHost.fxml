@@ -53,6 +53,6 @@
             <ColorPicker fx:id="StandartCanvasColorPicker" />
          </children>
       </VBox>
-      <Button id="ButtonCreateCanvas" maxWidth="100.0" mnemonicParsing="false" onAction="#SwitchToPaintPanel" text="LOGIN" GridPane.rowIndex="2" />
+      <Button id="ButtonCreateCanvas" maxWidth="100.0" mnemonicParsing="false" onAction="#SwitchToPaintPanel" text="CREATE" GridPane.rowIndex="2" />
    </children>
 </GridPane>

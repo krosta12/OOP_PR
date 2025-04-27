@@ -49,7 +49,7 @@ public class CreationInterfaceHostController {
                 // Create server with canvas parameters
                 // checking given by user port
                 int port = Integer.parseInt( portHolder.getText() );
-                final Server server = new Server(port, XResolution, YResolution, defaultColor); //1234 - REMOVE HARDCODE WARN
+                final Server server = new Server(port, XResolution, YResolution, defaultColor);
                 new Thread(server::startHost).start(); // Start a server on new Thread WARN CHECK A MEMORY LEAK AFTER new
 
                 // Open local paint panel as Client
