@@ -12,12 +12,11 @@ public class ServerOptionsController {
     // Метод, вызываемый при нажатии на кнопку "Host" + УБРАТЬ active флагв из IP инпута, вероятно переменить на порт
     public void host(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/ooppr/CreationInterfaceV2.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/ooppr/CreationInterfaceHost.fxml"));
             Parent root = fxmlLoader.load();
 
             // Получаем контроллер
-            CreationInterfaceController controller = fxmlLoader.getController();
-            controller.setConnectionType("host"); // Передаем "host"
+            CreationInterfaceHostController controller = fxmlLoader.getController();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.getScene().setRoot(root);
@@ -29,12 +28,11 @@ public class ServerOptionsController {
 
     public void join(ActionEvent event) { // меняем join() чтобы он тоже принимал ActionEvent
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/ooppr/CreationInterfaceV2.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/ooppr/JoinRoom.fxml"));
             Parent root = fxmlLoader.load();
 
             // Получаем контроллер
-            CreationInterfaceController controller = fxmlLoader.getController();
-            controller.setConnectionType("join"); // Передаем "join"
+            JoinRoomController controller = fxmlLoader.getController();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.getScene().setRoot(root);
