@@ -9,6 +9,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.transform.Scale;
+import org.example.ooppr.History.DrawAction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PaintingZoneManager {
     private final Canvas canvas;
@@ -27,10 +31,22 @@ public class PaintingZoneManager {
     private double lastX;
     private double lastY;
 
+    // -- DRAWING HISTORY --
+    private final List<DrawAction> actionsHistory = new ArrayList<>();
+    private DrawAction currentAction = null;
+    private Color defaultBGColor;
+
+
     public PaintingZoneManager(Canvas canvas, ScrollPane scrollPane) {
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
     }
+
+    public void setBackgroundColor(Color color) {
+        this.defaultBGColor = color;
+    }
+
+
 
     // -- ZOOMING METHODS --
     /**
@@ -90,6 +106,11 @@ public class PaintingZoneManager {
     private void handleMousePressed(MouseEvent event) {
         lastX = event.getX();
         lastY = event.getY();
+
+        // saving current action
+        currentAction = new DrawAction(selectedColor, brushSize, selectedTool);
+
+        // draw point on canvas
         drawPoint(lastX, lastY);
     }
 
@@ -119,6 +140,12 @@ public class PaintingZoneManager {
     private void handleMouseDragged(MouseEvent event) {
         double currentX = event.getX();
         double currentY = event.getY();
+
+        // saving current point
+        if( currentAction != null ) {
+            currentAction.addPoint(currentX, currentY);
+        }
+
         drawLine(lastX, lastY, currentX, currentY);
         lastX = currentX;
         lastY = currentY;
@@ -162,7 +189,26 @@ public class PaintingZoneManager {
     }
 
     private void handleMouseReleased(MouseEvent event) {
-        // TODO ?
+        if( currentAction != null ) {
+            actionsHistory.add(currentAction);
+            currentAction = null;
+        }
+    }
+
+    public void undoLastAction(Color bc) {
+        if(!actionsHistory.isEmpty()) {
+            actionsHistory.removeLast();
+            redrawAll(bc);
+        }
+    }
+
+    private void redrawAll(Color bc) {
+        gc.setFill(bc);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        for( DrawAction action : actionsHistory ) {
+            action.draw(gc);
+        }
     }
 
     public void setSelectedTool(char t) {

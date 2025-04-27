@@ -51,11 +51,8 @@ public class ProductController implements Initializable {
     @FXML
     private ScrollPane paintingZoneScrollPane;
 
-    //init standart rom nullpointerExcetption
-    private char selectedTool = 'b'; //придумаешь лучше - поменяй switch-case
+    private Color defaultBCColor;
 
-    private double brushSize = 5.0; //slider Text привязать надо
-    private double lastX, lastY;
 
     /**
      * initialize an event handlers components for painting zone
@@ -67,6 +64,18 @@ public class ProductController implements Initializable {
         PaintingZoneManager paintingZoneManager = new PaintingZoneManager(paintingZone, paintingZoneScrollPane);
         paintingZoneManager.setupZooming( paintingZoneScrollPane );
         paintingZoneManager.setupDrawing();
+
+        // CTRL+Z undo action listener
+        paintingZone.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.setOnKeyPressed(event -> {
+                    if (event.isControlDown() && event.getCode().toString().equals("Z")) {
+                        paintingZoneManager.undoLastAction(defaultBCColor);
+                    }
+                });
+            }
+        });
+
 
         // Attaching buttons functionality
         ColorPickerManager colorPickerManager = new ColorPickerManager( paintingZoneManager );
@@ -82,6 +91,7 @@ public class ProductController implements Initializable {
         toolsManager.attachSlider( brushSizeSlider, NPixelsText );
     }
 
+
     /**
      * The method puts Canvas size and default color
      * @param XResolution canvas width
@@ -91,6 +101,7 @@ public class ProductController implements Initializable {
     public void initializeCanvas(int XResolution, int YResolution, Color fillColor) {
         paintingZone.setWidth(XResolution);
         paintingZone.setHeight(YResolution);
+        defaultBCColor = fillColor;
         Platform.runLater(() -> fillCanvasColor(fillColor));
     }
 
