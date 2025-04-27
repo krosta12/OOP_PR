@@ -1,51 +1,59 @@
 package org.example.ooppr.Server;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import javafx.scene.paint.Color;
+import java.io.*;
+import java.net.*;
+import java.util.Map;
 
 public class Client {
+    public interface CanvasParamsCallback {
+        void onCanvasParamsReceived(int xRes, int yRes, Color color);
+        void onConnectionError(String message);
+    }
+
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
-    public Client(String ip, int port) {
-        try {
-            this.socket = new Socket(ip, port);
-            this.out = new ObjectOutputStream(socket.getOutputStream());
-            this.in = new ObjectInputStream(socket.getInputStream());
+    //WARN DOC
+    public static void connect(String ip, int port, CanvasParamsCallback callback) {
+        new Thread(() -> { //WARN RECHECK ARROW FUNC //WARN RECHECK MEMORY AFTER NEW OBJECT
+            try (Socket socket = new Socket(ip, port);
+                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
-            System.out.println("Подключился к серверу!");
+                Object initialData = in.readObject();
+                if (initialData instanceof Map) {
+                    Map<?, ?> params = (Map<?, ?>) initialData;
+                    int xRes = (int) params.get("xResolution");
+                    int yRes = (int) params.get("yResolution");
+                    double red = (double) params.get("red");
+                    double green = (double) params.get("green");
+                    double blue = (double) params.get("blue");
+                    double opacity = (double) params.get("opacity");
 
-            // Можно запустить отдельный поток для прослушивания сообщений от сервера
-            new Thread(this::listenToServer).start();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void listenToServer() {
-        try {
-            Object obj;
-            while ((obj = in.readObject()) != null) {
-                if (obj instanceof Data data) {
-                    System.out.println("Получены данные от сервера: x=" + data.getX() + ", y=" + data.getY());
-                    // Тут можно что-то делать с этими данными
+                    callback.onCanvasParamsReceived(xRes, yRes,
+                            new Color(red, green, blue, opacity));
                 }
+
+                while (true) {
+                    Object data = in.readObject();
+                    if (data instanceof Data) {
+                        // WARN CREATE A DRAW LOGIC
+                    }
+                }
+            } catch (Exception e) {
+                callback.onConnectionError(e.getMessage());
             }
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Отключен от сервера.");
-        }
+        }).start(); //WARN CHECK IS SERVER STOP AFTER START
     }
 
+    //WARN DOC
     public void sendData(Data data) {
         try {
-            out.writeObject(data);
+            out.writeObject(data);//WARN REHECK USAGES
             out.flush();
-        } catch (IOException e) {
+        } catch (IOException e) { //WARN TRANSLATE
             System.out.println("Не удалось отправить данные серверу.");
         }
     }
