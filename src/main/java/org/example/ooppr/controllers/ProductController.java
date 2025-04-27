@@ -1,18 +1,12 @@
 package org.example.ooppr.controllers;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
-import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import org.example.ooppr.managers.ColorPickerManager;
 import org.example.ooppr.managers.PaintingZoneManager;
@@ -50,6 +44,9 @@ public class ProductController implements Initializable {
 
     @FXML
     private ScrollPane paintingZoneScrollPane;
+
+    @FXML
+    private Label ipPortLabel;
 
     private Color defaultBCColor;
 
@@ -114,5 +111,13 @@ public class ProductController implements Initializable {
         GraphicsContext gc = paintingZone.getGraphicsContext2D();
         gc.setFill(fillColor);
         gc.fillRect(0, 0, paintingZone.getWidth(), paintingZone.getHeight());
+    }
+
+    public void initializeCanvasByHistory() {
+
+    }
+
+    public void setIpPort(String ipPort) {
+        ipPortLabel.setText( "Server started at " + ipPort );
     }
 }

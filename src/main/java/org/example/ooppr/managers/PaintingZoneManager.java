@@ -34,19 +34,12 @@ public class PaintingZoneManager {
     // -- DRAWING HISTORY --
     private final List<DrawAction> actionsHistory = new ArrayList<>();
     private DrawAction currentAction = null;
-    private Color defaultBGColor;
 
 
     public PaintingZoneManager(Canvas canvas, ScrollPane scrollPane) {
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
     }
-
-    public void setBackgroundColor(Color color) {
-        this.defaultBGColor = color;
-    }
-
-
 
     // -- ZOOMING METHODS --
     /**

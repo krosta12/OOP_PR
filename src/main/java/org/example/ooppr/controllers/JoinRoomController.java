@@ -40,15 +40,21 @@ public class JoinRoomController {
      * The method switches the scene to Product. Checks the sizes of the passed canvas XResolutionHolder and YResolutionHolder.
      */
     public void SwitchToPaintPanel(ActionEvent event) throws IOException {
+        String ipAddr;
+        int port;
         try {
             String ipAddress = ipHolder.getText();
             if (ipAddress == null || ipAddress.isEmpty()) {
                 showAlert("IP error", "No IP entered", "Please enter the server IP address.");
                 return;
+            } else {
+                String[] parts = ipAddress.split(":");
+                ipAddr = parts[0];
+                port = Integer.parseInt(parts[1]);
             }
 
             // Connect to server with callback
-            Client.connect(ipAddress, 1234, new Client.CanvasParamsCallback() { //WARN REMOVE MOCK HARDCODE
+            Client.connect(ipAddr, port, new Client.CanvasParamsCallback() { //WARN REMOVE MOCK HARDCODE
                 @Override
                 public void onCanvasParamsReceived(int xRes, int yRes, Color color) {
                     Platform.runLater(() -> {
@@ -59,6 +65,7 @@ public class JoinRoomController {
 
                             ProductController controller = loader.getController();
                             controller.initializeCanvas(xRes, yRes, color);
+                            controller.initializeCanvasByHistory();
 
                             stage.setScene(new Scene(root));
                             stage.show();

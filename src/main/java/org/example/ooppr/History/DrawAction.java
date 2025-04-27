@@ -2,6 +2,8 @@ package org.example.ooppr.History;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +31,8 @@ public class DrawAction {
         gc.setStroke(color);
         gc.setFill(color);
 
-        gc.setLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
-        gc.setLineJoin(javafx.scene.shape.StrokeLineJoin.ROUND);
+        gc.setLineCap(StrokeLineCap.ROUND);
+        gc.setLineJoin(StrokeLineJoin.ROUND);
 
         Point prev = points.get(0);
         for (int i = 1; i < points.size(); i++) {

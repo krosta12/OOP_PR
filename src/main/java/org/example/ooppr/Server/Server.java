@@ -10,6 +10,7 @@ import java.util.concurrent.*;
 
 public class Server {
     private int port;
+    private String ip;
     private boolean isStarted = false;
     private final Set<ObjectOutputStream> clientStreams = ConcurrentHashMap.newKeySet();
 
@@ -29,7 +30,8 @@ public class Server {
     public void startHost() {
         try (ServerSocket serverSocket = new ServerSocket(this.port)) {
             isStarted = true;
-            System.out.println("server started at " + InetAddress.getLocalHost().getHostAddress() + ":" + port);
+            ip = InetAddress.getLocalHost().getHostAddress();
+            System.out.println("server started at " + ip + ":" + port);
 
             while (isStarted) {
                 Socket socket = serverSocket.accept();
@@ -103,6 +105,10 @@ public class Server {
                 System.out.println("Ошибка при отправке клиенту: " + e.getMessage());
             }
         }
+    }
+
+    public String getIpPort() {
+        return this.ip + ":" + port;
     }
 
     //WARN DOC
