@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PaintingZoneManager {
-    private final Canvas canvas;
-    private final GraphicsContext gc;
+    private Canvas canvas;
+    private GraphicsContext gc;
 
     // -- ZOOMING VARIABLES --
     private double zoomFactor = 1.0;
@@ -35,8 +35,10 @@ public class PaintingZoneManager {
     private final List<DrawAction> actionsHistory = new ArrayList<>();
     private DrawAction currentAction = null;
 
+    private Color defaultBCColor;
 
-    public PaintingZoneManager(Canvas canvas, ScrollPane scrollPane) {
+
+    public void setCanvas(Canvas canvas) {
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
     }
@@ -61,6 +63,9 @@ public class PaintingZoneManager {
             }
 
         });
+
+        // TODO CTRL + + (Zoom in)
+        // TODO CTRL + - (Zoom out)
     }
 
     /**
@@ -188,6 +193,8 @@ public class PaintingZoneManager {
         }
     }
 
+    // -- ACTIONS HISTORY METHODS --
+
     public void undoLastAction(Color bc) {
         if(!actionsHistory.isEmpty()) {
             actionsHistory.removeLast();
@@ -204,7 +211,23 @@ public class PaintingZoneManager {
         }
     }
 
+    public void setupUndoHotkey() {
+        canvas.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.setOnKeyPressed(event -> {
+                    if (event.isControlDown() && event.getCode().toString().equals("Z")) {
+                        undoLastAction(defaultBCColor);
+                    }
+                });
+            }
+        });
+    }
+
     public void setSelectedTool(char t) {
         selectedTool = t;
+    }
+
+    public void setDefaultBCColor(Color color) {
+        this.defaultBCColor = color;
     }
 }
