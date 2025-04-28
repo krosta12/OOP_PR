@@ -48,7 +48,7 @@ public class ProductController implements Initializable {
     @FXML
     private Label ipPortLabel;
 
-    private Color defaultBCColor;
+    private final PaintingZoneManager paintingZoneManager = new PaintingZoneManager();
 
 
     /**
@@ -58,20 +58,10 @@ public class ProductController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         // Creating painting zone (canvas) manager, setting functionality up
-        PaintingZoneManager paintingZoneManager = new PaintingZoneManager(paintingZone, paintingZoneScrollPane);
+        paintingZoneManager.setCanvas( paintingZone );
         paintingZoneManager.setupZooming( paintingZoneScrollPane );
         paintingZoneManager.setupDrawing();
-
-        // CTRL+Z undo action listener
-        paintingZone.sceneProperty().addListener((observable, oldScene, newScene) -> {
-            if (newScene != null) {
-                newScene.setOnKeyPressed(event -> {
-                    if (event.isControlDown() && event.getCode().toString().equals("Z")) {
-                        paintingZoneManager.undoLastAction(defaultBCColor);
-                    }
-                });
-            }
-        });
+        paintingZoneManager.setupUndoHotkey();
 
 
         // Attaching buttons functionality
@@ -98,7 +88,7 @@ public class ProductController implements Initializable {
     public void initializeCanvas(int XResolution, int YResolution, Color fillColor) {
         paintingZone.setWidth(XResolution);
         paintingZone.setHeight(YResolution);
-        defaultBCColor = fillColor;
+
         Platform.runLater(() -> fillCanvasColor(fillColor));
     }
 
@@ -110,6 +100,7 @@ public class ProductController implements Initializable {
     private void fillCanvasColor(Color fillColor) {
         GraphicsContext gc = paintingZone.getGraphicsContext2D();
         gc.setFill(fillColor);
+        paintingZoneManager.setDefaultBCColor(fillColor);
         gc.fillRect(0, 0, paintingZone.getWidth(), paintingZone.getHeight());
     }
 
