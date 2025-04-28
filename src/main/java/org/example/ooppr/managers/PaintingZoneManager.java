@@ -195,6 +195,10 @@ public class PaintingZoneManager {
 
     // -- ACTIONS HISTORY METHODS --
 
+    /**
+     * Undoing last drawing action
+     * @param bc default background color
+     */
     public void undoLastAction(Color bc) {
         if(!actionsHistory.isEmpty()) {
             actionsHistory.removeLast();
@@ -202,6 +206,10 @@ public class PaintingZoneManager {
         }
     }
 
+    /**
+     * Redrawing all the actions
+     * @param bc default backgroud color
+     */
     private void redrawAll(Color bc) {
         gc.setFill(bc);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -211,6 +219,9 @@ public class PaintingZoneManager {
         }
     }
 
+    /**
+     * Setting up CTRL+Z hotkey
+     */
     public void setupUndoHotkey() {
         canvas.sceneProperty().addListener((observable, oldScene, newScene) -> {
             if (newScene != null) {
