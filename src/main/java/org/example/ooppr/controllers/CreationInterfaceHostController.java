@@ -1,6 +1,5 @@
 package org.example.ooppr.controllers;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +11,6 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.example.ooppr.Server.Client;
 import org.example.ooppr.Server.Server;
 
 import java.io.IOException;
@@ -41,14 +39,17 @@ public class CreationInterfaceHostController {
 
             int XResolution = Integer.parseInt(XResolutionHolder.getText());
             int YResolution = Integer.parseInt(YResolutionHolder.getText());
+            int port = Integer.parseInt( portHolder.getText() );
 
             // Getting canvas default color
             Color defaultColor = StandartCanvasColorPicker.getValue();
 
-            if (resolutionIsValid(XResolution, YResolution)) {
+            if (resolutionportIsValid(XResolution, YResolution, port)) {
                 // Create server with canvas parameters
                 // checking given by user port
-                int port = Integer.parseInt( portHolder.getText() );
+
+                if( port >= 65535 ) showAlert( "Port value error", "Invalid port", "Please input valid port value" );
+
                 final Server server = new Server(port, XResolution, YResolution, defaultColor);
                 new Thread(server::startHost).start(); // Start a server on new Thread WARN CHECK A MEMORY LEAK AFTER new
 
@@ -65,7 +66,7 @@ public class CreationInterfaceHostController {
                 stage.setScene(scene);
                 stage.show();
             } else {
-                showAlert("Resolution error", "Wrong resolution!", "Please enter a valid resolution (positive integer).");
+                showAlert("Resolution or port error", "Wrong resolution or port value!", "Please enter a valid resolution (positive integer) or port values.");
             }
         } catch (NumberFormatException e) {
             showAlert("Input error", "Invalid input!", "Please input integer values.");
@@ -78,8 +79,8 @@ public class CreationInterfaceHostController {
      * @param yResolution canvas y resolution (height)
      * @return true if valid, false if not
      */
-    private boolean resolutionIsValid(int xResolution, int yResolution) {
-        return xResolution > 0 && yResolution > 0;
+    private boolean resolutionportIsValid(int xResolution, int yResolution, int port) {
+        return xResolution > 0 && yResolution > 0 && port <= 65535 && port > 0;
     }
 
     /**
