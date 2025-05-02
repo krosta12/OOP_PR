@@ -42,6 +42,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -74,40 +75,63 @@
       </MenuBar>
    </top>
    <right>
-      <VBox id="RightBurgerBar" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: gray; -fx-border-color: black;" BorderPane.alignment="CENTER">
+      <VBox id="RightBurgerBar" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: gray; -fx-border-color: black;" BorderPane.alignment="CENTER">
          <children>
-            <VBox maxHeight="1.7976931348623157E308" prefHeight="1080.0" prefWidth="100.0">
+            <VBox maxHeight="1.7976931348623157E308" prefHeight="1080.0" prefWidth="200.0">
                <children>
-                  <HBox id="LayersNavHolder" alignment="CENTER" prefHeight="49.0" prefWidth="100.0">
+                  <HBox id="LayersNavHolder" alignment="CENTER" prefHeight="49.0" prefWidth="100.0" style="-fx-background-color: #D4D4D4;">
                      <children>
-                        <Text id="LayerText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                        <Button id="AddLayerButton" mnemonicParsing="false" text="+">
-                           <HBox.margin>
-                              <Insets left="20.0" />
-                           </HBox.margin></Button>
+                        <Text id="LayerText" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: #242424;" text="Info">
+                           <font>
+                              <Font size="24.0" />
+                           </font></Text>
                      </children>
                   </HBox>
-                  <VBox id="LayersContainer" maxWidth="1.7976931348623157E308" prefHeight="1080.0" style="-fx-background-color: #755D6A;">
+                  <VBox id="LayersContainer" maxWidth="1.7976931348623157E308" prefHeight="10804.0" style="-fx-background-color: #242424;">
                      <children>
-                        <Label fx:id="ipPortLabel" text="Label" />
-                     </children></VBox>
+                        <Label fx:id="InfoLabel" style="-fx-text-fill: #D4D4D4;" styleClass="text" text="Server info">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="hostJoinLabel" style="-fx-text-fill: #D4D4D4;" text="host/join">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Label>
+                        <Label fx:id="ipPortLabel" style="-fx-text-fill: #D4D4D4;" text="ip">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Label>
+                        <Separator opacity="0.0" prefHeight="15.0" prefWidth="200.0" />
+                        <Label fx:id="ConnectionsInfo" style="-fx-text-fill: D4D4D4;" text="Connections info">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets bottom="15.0" left="15.0" top="15.0" />
+                     </padding></VBox>
                </children>
             </VBox>
             <VBox maxHeight="1.7976931348623157E308" prefHeight="1080.0" prefWidth="100.0">
                <children>
-                  <HBox alignment="CENTER" prefHeight="49.0" prefWidth="100.0">
+                  <HBox alignment="CENTER" prefHeight="49.0" prefWidth="100.0" style="-fx-background-color: #D4D4D4;">
                      <children>
-                        <Text id="HistoryText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                        <Text id="HistoryText" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: #242424;" text="History">
+                           <font>
+                              <Font size="24.0" />
+                           </font></Text>
                      </children>
                   </HBox>
-                  <VBox id="HistoryContainer" maxWidth="1.7976931348623157E308" prefHeight="1080.0" style="-fx-background-color: #755D6A;" />
+                  <VBox id="HistoryContainer" maxWidth="1.7976931348623157E308" prefHeight="1080.0" style="-fx-background-color: #242424;" />
                </children>
             </VBox>
          </children>
       </VBox>
    </right>
    <center>
-      <VBox id="Center" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox id="Center" prefHeight="200.0" BorderPane.alignment="CENTER">
          <children>
             <HBox id="Header" maxHeight="50.0" minHeight="50.0" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #242424;" styleClass="mainBoard">
                <children>
