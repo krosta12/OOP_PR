@@ -46,6 +46,9 @@ public class ProductController implements Initializable {
     private ScrollPane paintingZoneScrollPane;
 
     @FXML
+    private Label hostJoinLabel;
+
+    @FXML
     private Label ipPortLabel;
 
     private final PaintingZoneManager paintingZoneManager = new PaintingZoneManager();
@@ -109,6 +112,7 @@ public class ProductController implements Initializable {
     }
 
     public void setIpPort(String ipPort) {
-        ipPortLabel.setText( "Server started at " + ipPort );
+        hostJoinLabel.setText( "Server started at: ");
+        ipPortLabel.setText( ipPort );
     }
 }
