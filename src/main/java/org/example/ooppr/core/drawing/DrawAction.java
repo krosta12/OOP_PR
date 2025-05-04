@@ -5,10 +5,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DrawAction {
+public class DrawAction implements Serializable {
     private final List<Point> points = new ArrayList<>();
     private final Color color;
     private final double brushSize;
