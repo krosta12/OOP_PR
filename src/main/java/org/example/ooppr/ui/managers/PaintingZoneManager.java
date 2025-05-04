@@ -1,5 +1,6 @@
 package org.example.ooppr.ui.managers;
 
+import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
@@ -41,6 +42,20 @@ public class PaintingZoneManager {
     public void setCanvas(Canvas canvas) {
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
+    }
+
+    public void initializeCanvas(int XResolution, int YResolution, Color fillColor) {
+        canvas.setWidth(XResolution);
+        canvas.setHeight(YResolution);
+
+        Platform.runLater(() -> fillCanvasColor(fillColor));
+    }
+
+    private void fillCanvasColor(Color fillColor) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(fillColor);
+        setDefaultBCColor(fillColor);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     // -- ZOOMING METHODS --

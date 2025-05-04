@@ -3,10 +3,15 @@ package org.example.ooppr.core.network;
 import javafx.scene.paint.Color;
 import org.example.ooppr.Server.Data;
 import org.example.ooppr.core.drawing.DrawAction;
+import org.example.ooppr.core.network.protocol.CanvasStateMessage;
+import org.example.ooppr.core.network.protocol.DrawActionMessage;
+import org.example.ooppr.core.network.protocol.Message;
 
+import java.awt.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.*;
 
 //WARN SERVER MUST BE CLOSED AFTER APP CLOUSING
@@ -49,19 +54,23 @@ public class Server {
     }
 
     private void handleClient(Socket socket) {
-        try( ObjectInputStream in = new ObjectInputStream(socket.getInputStream()) ) {
+        try {
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+
+            // Send init data: actions, resolution and bc color
+            CanvasStateMessage init = new CanvasStateMessage(history, xResolution, yResolution, canvasColor);
+            out.writeObject(init);
+            out.flush();
+
+            // Listening client
             while(true) {
                 Object data = in.readObject();
-                if( data instanceof DrawAction ) {
-                    history.add( (DrawAction) data);
-                    broadcast( (DrawAction) data);
-                } else if( data instanceof String ) {
-                    if( data.equals("getResolution") ) {
-                        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-                        out.writeChars( this.xResolution + " x " + this.yResolution );
-                    }
+                if( data instanceof DrawActionMessage drawMsg ) {
+                    DrawAction action = drawMsg.getDrawAction();
+                    history.add(action);
+                    broadcast( drawMsg );
                 }
-
             }
         } catch (IOException | ClassNotFoundException e) {
             System.out.println( "- Client disconnected: " );
@@ -72,17 +81,16 @@ public class Server {
     /**
      * Broadcasting all data to all Clients (echo)
      */
-    private void broadcast(DrawAction action) {
+    private void broadcast(Message msg) {
         for (ObjectOutputStream clientStream : clientStreams) {
             try {
-                clientStream.writeObject(action);
+                clientStream.writeObject(msg);
                 clientStream.flush();
             } catch (IOException e) {
-                System.out.println("Data sending error: " + e.getMessage());
+                System.out.println("! Broadcast error: " + e.getMessage());
             }
         }
     }
-
 
 
     //WARN DOC
