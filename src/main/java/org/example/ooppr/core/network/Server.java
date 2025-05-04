@@ -51,9 +51,17 @@ public class Server {
     private void handleClient(Socket socket) {
         try( ObjectInputStream in = new ObjectInputStream(socket.getInputStream()) ) {
             while(true) {
-                DrawAction action = (DrawAction) in.readObject();
-                history.add(action);
-                broadcast(action);
+                Object data = in.readObject();
+                if( data instanceof DrawAction ) {
+                    history.add( (DrawAction) data);
+                    broadcast( (DrawAction) data);
+                } else if( data instanceof String ) {
+                    if( data.equals("getResolution") ) {
+                        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                        out.writeChars( this.xResolution + " x " + this.yResolution );
+                    }
+                }
+
             }
         } catch (IOException | ClassNotFoundException e) {
             System.out.println( "- Client disconnected: " );
@@ -63,7 +71,6 @@ public class Server {
 
     /**
      * Broadcasting all data to all Clients (echo)
-     * @param data Sending data
      */
     private void broadcast(DrawAction action) {
         for (ObjectOutputStream clientStream : clientStreams) {
@@ -76,12 +83,7 @@ public class Server {
         }
     }
 
-    /**
-     * @return String "[ip]:[port]"
-     */
-    public String getIpPort() {
-        return this.ip + ":" + port;
-    }
+
 
     //WARN DOC
     //WARN REVIEW USAGE
@@ -92,5 +94,14 @@ public class Server {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    public String getIp() {
+        return this.ip;
+    }
+
+    public int getPort() {
+        return this.port;
     }
 }

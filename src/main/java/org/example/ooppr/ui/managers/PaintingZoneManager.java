@@ -118,7 +118,7 @@ public class PaintingZoneManager {
      * @param y point coordinat on plane
      * function draw a oval or cycle on plane by x,y params with resourses
      */
-    private void drawPoint(double x, double y) {
+    public void drawPoint(double x, double y) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         if (selectedTool == 'b') {
@@ -240,5 +240,11 @@ public class PaintingZoneManager {
 
     public void setDefaultBCColor(Color color) {
         this.defaultBCColor = color;
+    }
+
+    public void drawByDrawAction(DrawAction action) {
+        Color lastColor = selectedColor;
+        action.draw(gc);
+        gc.setFill(lastColor);
     }
 }

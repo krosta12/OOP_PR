@@ -37,18 +37,21 @@ public class CreationInterfaceHostController {
     public void SwitchToPaintPanel(ActionEvent event) throws IOException {
         try { // CREATING HOST ROOM
 
+            // Data by user
             int XResolution = Integer.parseInt(XResolutionHolder.getText());
             int YResolution = Integer.parseInt(YResolutionHolder.getText());
             int port = Integer.parseInt( portHolder.getText() );
+            Color defaultColor = StandartCanvasColorPicker.getValue();// Getting canvas default color
 
-            // Getting canvas default color
-            Color defaultColor = StandartCanvasColorPicker.getValue();
-
-            if (resolutionportIsValid(XResolution, YResolution, port)) {
+            // Creating server and client window
+            if (resolutionportIsValid(XResolution, YResolution, port)) { // checking is all data valid
                 // Create server with canvas parameters
                 // checking given by user port
 
-                if( port >= 65535 ) showAlert( "Port value error", "Invalid port", "Please input valid port value" );
+                if( port >= 65535 ) {
+                    showAlert( "Port value error", "Invalid port", "Please input valid port value" );
+                    return;
+                }
 
                 final Server server = new Server(port, XResolution, YResolution, defaultColor);
                 new Thread(server::startHost).start(); // Start a server on new Thread WARN CHECK A MEMORY LEAK AFTER new
@@ -60,7 +63,8 @@ public class CreationInterfaceHostController {
 
                 ProductController productController = loader.getController();
                 productController.initializeCanvas(XResolution, YResolution, defaultColor);
-                productController.setIpPort( server.getIpPort() );
+                productController.setIpPort( server.getIp(), server.getPort() );
+                productController.connectToHost( server.getIp(), server.getPort() );
 
                 scene = new Scene(root);
                 stage.setScene(scene);

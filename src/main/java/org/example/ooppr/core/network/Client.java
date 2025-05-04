@@ -2,10 +2,11 @@ package org.example.ooppr.core.network;
 
 import javafx.scene.paint.Color;
 import org.example.ooppr.Server.Data;
+import org.example.ooppr.core.drawing.DrawAction;
+import org.example.ooppr.ui.managers.PaintingZoneManager;
 
 import java.io.*;
 import java.net.*;
-import java.util.Map;
 
 public class Client {
     public interface CanvasParamsCallback {
@@ -18,34 +19,20 @@ public class Client {
     private ObjectInputStream in;
 
     //WARN DOC
-    public static void connect(String ip, int port, CanvasParamsCallback callback) {
+    public static void connect(String ip, int port, PaintingZoneManager paintingZoneManager) {
         new Thread(() -> { //WARN RECHECK ARROW FUNC //WARN RECHECK MEMORY AFTER NEW OBJECT
             try (Socket socket = new Socket(ip, port);
                  ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                  ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
-                Object initialData = in.readObject();
-                if (initialData instanceof Map) {
-                    Map<?, ?> params = (Map<?, ?>) initialData;
-                    int xRes = (int) params.get("xResolution");
-                    int yRes = (int) params.get("yResolution");
-                    double red = (double) params.get("red");
-                    double green = (double) params.get("green");
-                    double blue = (double) params.get("blue");
-                    double opacity = (double) params.get("opacity");
+                Object firstAction = in.readObject();
 
-                    callback.onCanvasParamsReceived(xRes, yRes,
-                            new Color(red, green, blue, opacity));
-                }
-
-                while (true) {
-                    Object data = in.readObject();
-                    if (data instanceof Data) {
-                        // WARN CREATE A DRAW LOGIC
-                    }
+                while (true) { // getting all new DrawActions
+                    DrawAction action = (DrawAction) in.readObject();
+                    paintingZoneManager.drawByDrawAction(action);
                 }
             } catch (Exception e) {
-                callback.onConnectionError(e.getMessage());
+                System.out.println("Error: " + e.getMessage());
             }
         }).start(); //WARN CHECK IS SERVER STOP AFTER START
     }
