@@ -39,47 +39,38 @@ public class JoinRoomController {
      * The method switches the scene to Product. Checks the sizes of the passed canvas XResolutionHolder and YResolutionHolder.
      */
     public void SwitchToPaintPanel(ActionEvent event) throws IOException {
-        String ipAddr;
+        String ip;
         int port;
-        try {
+        try { // Get ip address and port by user input
             String ipAddress = ipHolder.getText();
             if (ipAddress == null || ipAddress.isEmpty()) {
                 showAlert("IP error", "No IP entered", "Please enter the server IP address.");
                 return;
             } else {
                 String[] parts = ipAddress.split(":");
-                ipAddr = parts[0];
+                ip = parts[0];
                 port = Integer.parseInt(parts[1]);
-            }
-
-            // Connect to server with callback
-            Client.connect(ipAddr, port, new Client.CanvasParamsCallback() { //WARN REMOVE MOCK HARDCODE
-                @Override
-                public void onCanvasParamsReceived(int xRes, int yRes, Color color) {
-                    Platform.runLater(() -> {
-                        try {
-                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/ooppr/Product.fxml"));
-                            Parent root = loader.load();
-                            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow(); //WARN RECHECK type->type
-
-                            ProductController controller = loader.getController();
-                            controller.initializeCanvas(xRes, yRes, color);
-                            controller.initializeCanvasByHistory();
-
-                            stage.setScene(new Scene(root));
-                            stage.show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
+                if( port >= 65535 ) {
+                    showAlert( "Port value error", "Invalid port", "Please input valid port value" );
+                    return;
                 }
+            };
 
-                @Override
-                public void onConnectionError(String message) {
-                    Platform.runLater(() ->
-                            showAlert("Connection Error", "Connection Failed", message));
-                }
-            });
+            // Connect to server
+            // Open local paint panel as Client
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/ooppr/Product.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            ProductController productController = loader.getController();
+            productController.setIpPort( ip, port );
+            productController.connectToHost( ip, port );
+
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+
+
         } catch (NumberFormatException e) {
             showAlert("Input error", "Invalid input!", "Please input integer values.");
         }
