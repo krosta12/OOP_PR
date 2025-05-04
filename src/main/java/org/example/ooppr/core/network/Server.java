@@ -2,6 +2,7 @@ package org.example.ooppr.core.network;
 
 import javafx.scene.paint.Color;
 import org.example.ooppr.Server.Data;
+import org.example.ooppr.core.drawing.DrawAction;
 
 import java.io.*;
 import java.net.*;
@@ -15,8 +16,10 @@ public class Server {
     private String ip;
     private boolean isStarted = false;
     private final Set<ObjectOutputStream> clientStreams = ConcurrentHashMap.newKeySet();
+    private final List<DrawAction> history = new ArrayList<>();
 
-    // Добавленные поля для параметров холста
+
+    // Canvas main parameters
     private int xResolution;
     private int yResolution;
     private Color canvasColor;
@@ -33,82 +36,49 @@ public class Server {
         try (ServerSocket serverSocket = new ServerSocket(this.port)) {
             isStarted = true;
             ip = InetAddress.getLocalHost().getHostAddress();
-            System.out.println("server started at " + ip + ":" + port);
+            System.out.println("* Server started at " + ip + ":" + port);
 
             while (isStarted) {
                 Socket socket = serverSocket.accept();
-                System.out.println("new client connected: " + socket.getRemoteSocketAddress());
-                ClientHandler handler = new ClientHandler(socket);
-                new Thread(handler).start();
+                System.out.println("+ Client connected: " + socket.getRemoteSocketAddress());
+                new Thread(() -> handleClient(socket) ).start();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    //WARN MOVE IT TO SECOND FILE
-    private class ClientHandler implements Runnable {
-        private Socket socket;
-
-        //WARN WRITE DOC
-        public ClientHandler(Socket socket) {
-            this.socket = socket;
+    private void handleClient(Socket socket) {
+        try( ObjectInputStream in = new ObjectInputStream(socket.getInputStream()) ) {
+            while(true) {
+                DrawAction action = (DrawAction) in.readObject();
+                history.add(action);
+                broadcast(action);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println( "- Client disconnected: " );
         }
+    }
 
-        //WARN WRITE DOC
-        public void run() {
-            ObjectOutputStream out = null;
-            ObjectInputStream in = null;
+
+    /**
+     * Broadcasting all data to all Clients (echo)
+     * @param data Sending data
+     */
+    private void broadcast(DrawAction action) {
+        for (ObjectOutputStream clientStream : clientStreams) {
             try {
-                out = new ObjectOutputStream(socket.getOutputStream());
-                in = new ObjectInputStream(socket.getInputStream());
-                clientStreams.add(out);
-
-                //WARN USE CONST-s?
-                Map<String, Object> canvasParams = new HashMap<>();
-                canvasParams.put("xResolution", xResolution);
-                canvasParams.put("yResolution", yResolution);
-                canvasParams.put("red", canvasColor.getRed());
-                canvasParams.put("green", canvasColor.getGreen());
-                canvasParams.put("blue", canvasColor.getBlue());
-                canvasParams.put("opacity", canvasColor.getOpacity());
-                out.writeObject(canvasParams);
-                out.flush();
-
-                Object obj;
-                while ((obj = in.readObject()) != null) {
-                    if (obj instanceof Data data) { //WARN TRANSLATE IT BEFORE RELEASE
-                        System.out.println("Получена Data от клиента: x=" + data.getX() + ", y=" + data.getY());
-                        broadcast(data);
-                    }
-                }
-            } catch (IOException | ClassNotFoundException e) {//WARN TRANSLATE
-                System.out.println("Клиент отключился: " + e.getMessage());
-            } finally {
-                if (out != null) {
-                    clientStreams.remove(out);
-                    try { out.close(); } catch (IOException ignored) {}
-                }
-                try {
-                    if (in != null) in.close();
-                    socket.close();
-                } catch (IOException ignored) {} //WARN CHECK IS SERVER CLOSED AFTER CRASH
+                clientStream.writeObject(action);
+                clientStream.flush();
+            } catch (IOException e) {
+                System.out.println("Data sending error: " + e.getMessage());
             }
         }
     }
 
-    //WARN DOC
-    private void broadcast(Data data) {
-        for (ObjectOutputStream out : clientStreams) {
-            try {
-                out.writeObject(data);
-                out.flush();
-            } catch (IOException e) { //WARN TRANSLATE
-                System.out.println("Ошибка при отправке клиенту: " + e.getMessage());
-            }
-        }
-    }
-
+    /**
+     * @return String "[ip]:[port]"
+     */
     public String getIpPort() {
         return this.ip + ":" + port;
     }
