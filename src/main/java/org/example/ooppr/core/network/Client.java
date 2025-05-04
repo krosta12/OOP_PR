@@ -1,18 +1,16 @@
 package org.example.ooppr.core.network;
 
-import javafx.scene.paint.Color;
 import org.example.ooppr.Server.Data;
 import org.example.ooppr.core.drawing.DrawAction;
+import org.example.ooppr.core.network.protocol.CanvasStateMessage;
+import org.example.ooppr.core.network.protocol.DrawActionMessage;
 import org.example.ooppr.ui.managers.PaintingZoneManager;
 
 import java.io.*;
 import java.net.*;
 
 public class Client {
-    public interface CanvasParamsCallback {
-        void onCanvasParamsReceived(int xRes, int yRes, Color color);
-        void onConnectionError(String message);
-    }
+
 
     private Socket socket;
     private ObjectOutputStream out;
@@ -25,7 +23,26 @@ public class Client {
                  ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                  ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
-                Object firstAction = in.readObject();
+                Object msg = in.readObject();
+
+                // First message - initialization
+                if( msg instanceof CanvasStateMessage canvasMsg) {
+                    paintingZoneManager.initializeCanvas(
+                            canvasMsg.getxResolution(),
+                            canvasMsg.getyResolution(),
+                            canvasMsg.getColor()
+                    );
+
+                    // drawing all by history
+                    for( DrawAction action : canvasMsg.getDrawActions() ) {
+                        paintingZoneManager.drawByDrawAction(action);
+                    }
+                } else if ( msg instanceof DrawActionMessage drawMsg) {
+                    DrawAction action = drawMsg.getDrawAction();
+                    paintingZoneManager.drawByDrawAction(action);
+                } else {
+                    System.out.println( "! Unknown message" );
+                }
 
                 while (true) { // getting all new DrawActions
                     DrawAction action = (DrawAction) in.readObject();
@@ -38,12 +55,13 @@ public class Client {
     }
 
     //WARN DOC
-    public void sendData(Data data) {
+    public void sendDrawAction(DrawAction action, String nickname) {
         try {
-            out.writeObject(data);//WARN REHECK USAGES
+            DrawActionMessage msg = new DrawActionMessage(action, nickname);
+            out.writeObject(msg);
             out.flush();
         } catch (IOException e) { //WARN TRANSLATE
-            System.out.println("Не удалось отправить данные серверу.");
+            System.out.println("! Failed to send message");
         }
     }
 }
