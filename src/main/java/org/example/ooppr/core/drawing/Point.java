@@ -1,4 +1,4 @@
-package org.example.ooppr.History;
+package org.example.ooppr.core.drawing;
 
 public class Point {
     double x, y;

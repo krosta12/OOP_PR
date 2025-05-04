@@ -1,4 +1,4 @@
-package org.example.ooppr.managers;
+package org.example.ooppr.ui.managers;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;

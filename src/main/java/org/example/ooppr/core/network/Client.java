@@ -1,6 +1,8 @@
-package org.example.ooppr.Server;
+package org.example.ooppr.core.network;
 
 import javafx.scene.paint.Color;
+import org.example.ooppr.Server.Data;
+
 import java.io.*;
 import java.net.*;
 import java.util.Map;
