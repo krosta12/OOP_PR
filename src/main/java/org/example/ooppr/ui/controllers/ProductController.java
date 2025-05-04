@@ -1,4 +1,4 @@
-package org.example.ooppr.controllers;
+package org.example.ooppr.ui.controllers;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -8,9 +8,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import org.example.ooppr.managers.ColorPickerManager;
-import org.example.ooppr.managers.PaintingZoneManager;
-import org.example.ooppr.managers.ToolsManager;
+import org.example.ooppr.ui.managers.ColorPickerManager;
+import org.example.ooppr.ui.managers.PaintingZoneManager;
+import org.example.ooppr.ui.managers.ToolsManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;

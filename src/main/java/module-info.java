@@ -7,6 +7,6 @@ module org.example.ooppr {
 
     opens org.example.ooppr to javafx.fxml;
     exports org.example.ooppr;
-    exports org.example.ooppr.controllers;
-    opens org.example.ooppr.controllers to javafx.fxml;
+    exports org.example.ooppr.ui.controllers;
+    opens org.example.ooppr.ui.controllers to javafx.fxml;
 }

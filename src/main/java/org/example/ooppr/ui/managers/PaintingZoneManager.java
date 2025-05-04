@@ -1,4 +1,4 @@
-package org.example.ooppr.managers;
+package org.example.ooppr.ui.managers;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.transform.Scale;
-import org.example.ooppr.History.DrawAction;
+import org.example.ooppr.core.drawing.DrawAction;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package org.example.ooppr.Server;
 import javafx.scene.paint.Color;
-import org.example.ooppr.History.DrawAction;
+import org.example.ooppr.core.drawing.DrawAction;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package org.example.ooppr.controllers;
+package org.example.ooppr.ui.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;

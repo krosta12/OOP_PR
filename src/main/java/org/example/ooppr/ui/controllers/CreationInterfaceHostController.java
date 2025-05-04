@@ -1,4 +1,4 @@
-package org.example.ooppr.controllers;
+package org.example.ooppr.ui.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,7 +11,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.example.ooppr.Server.Server;
+import org.example.ooppr.core.network.Server;
 
 import java.io.IOException;
 
