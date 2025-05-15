@@ -11,12 +11,12 @@ import java.util.List;
 
 public class DrawAction implements Serializable {
     private final List<Point> points = new ArrayList<>();
-    private final Color color;
+    private final String colorWeb; // TODO color serialization
     private final double brushSize;
     private final char toolType; // 'b' - brush, 'l' - eraser
 
-    public DrawAction(Color color, double brushSize, char toolType) {
-        this.color = color;
+    public DrawAction(String colorWeb, double brushSize, char toolType) {
+        this.colorWeb = colorWeb;
         this.brushSize = brushSize;
         this.toolType = toolType;
     }
@@ -29,8 +29,8 @@ public class DrawAction implements Serializable {
         if( points.isEmpty() ) return;
 
         gc.setLineWidth(brushSize);
-        gc.setStroke(color);
-        gc.setFill(color);
+        gc.setStroke( Color.web( colorWeb ) );
+        gc.setFill( Color.web( colorWeb ) );
 
         gc.setLineCap(StrokeLineCap.ROUND);
         gc.setLineJoin(StrokeLineJoin.ROUND);

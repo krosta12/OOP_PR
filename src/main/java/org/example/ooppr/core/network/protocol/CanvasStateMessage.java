@@ -11,15 +11,15 @@ public class CanvasStateMessage extends Message{
     private final List<DrawAction> actions;
     private final int xResolution;
     private final int yResolution;
-    private final Color color;
+    private final String colorWeb;
 
 
-    public CanvasStateMessage(List<DrawAction> drawActions, int xResolution, int yResolution, Color color) {
+    public CanvasStateMessage(List<DrawAction> drawActions, int xResolution, int yResolution, String colorWeb) {
         super(MessageType.CANVAS_STATE);
         this.actions = drawActions;
         this.xResolution = xResolution;
         this.yResolution = yResolution;
-        this.color = color;
+        this.colorWeb = colorWeb;
     }
 
     // -- GETTERS --
@@ -35,8 +35,8 @@ public class CanvasStateMessage extends Message{
         return yResolution;
     }
 
-    public Color getColor() {
-        return color;
+    public String getColorWeb() {
+        return colorWeb;
     }
 
 }

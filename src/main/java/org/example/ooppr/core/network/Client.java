@@ -19,9 +19,10 @@ public class Client {
     //WARN DOC
     public static void connect(String ip, int port, PaintingZoneManager paintingZoneManager) {
         new Thread(() -> { //WARN RECHECK ARROW FUNC //WARN RECHECK MEMORY AFTER NEW OBJECT
-            try (Socket socket = new Socket(ip, port);
+            try ( Socket socket = new Socket(ip, port);
                  ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream())
+            ) {
 
                 Object msg = in.readObject();
 
@@ -30,7 +31,7 @@ public class Client {
                     paintingZoneManager.initializeCanvas(
                             canvasMsg.getxResolution(),
                             canvasMsg.getyResolution(),
-                            canvasMsg.getColor()
+                            canvasMsg.getColorWeb()
                     );
 
                     // drawing all by history

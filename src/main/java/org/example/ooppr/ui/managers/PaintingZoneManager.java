@@ -44,11 +44,11 @@ public class PaintingZoneManager {
         this.gc = canvas.getGraphicsContext2D();
     }
 
-    public void initializeCanvas(int XResolution, int YResolution, Color fillColor) {
+    public void initializeCanvas(int XResolution, int YResolution, String fillColorWeb) {
         canvas.setWidth(XResolution);
         canvas.setHeight(YResolution);
 
-        Platform.runLater(() -> fillCanvasColor(fillColor));
+        Platform.runLater(() -> fillCanvasColor( Color.web(fillColorWeb) ));
     }
 
     private void fillCanvasColor(Color fillColor) {
@@ -121,7 +121,7 @@ public class PaintingZoneManager {
         lastY = event.getY();
 
         // saving current action
-        currentAction = new DrawAction(selectedColor, brushSize, selectedTool);
+        currentAction = new DrawAction(selectedColor.toString(), brushSize, selectedTool);
 
         // draw point on canvas
         drawPoint(lastX, lastY);
