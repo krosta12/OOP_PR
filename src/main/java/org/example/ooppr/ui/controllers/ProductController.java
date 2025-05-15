@@ -1,10 +1,8 @@
 package org.example.ooppr.ui.controllers;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -90,7 +88,7 @@ public class ProductController implements Initializable {
      * @param fillColor canvas default background color
      */
     public void initializeCanvas(int XResolution, int YResolution, Color fillColor) {
-        paintingZoneManager.initializeCanvas(XResolution, YResolution, fillColor);
+        paintingZoneManager.initializeCanvas(XResolution, YResolution, fillColor.toString());
     }
 
     public void initializeCanvasByHistory() {

@@ -1,13 +1,11 @@
 package org.example.ooppr.core.network;
 
 import javafx.scene.paint.Color;
-import org.example.ooppr.Server.Data;
 import org.example.ooppr.core.drawing.DrawAction;
 import org.example.ooppr.core.network.protocol.CanvasStateMessage;
 import org.example.ooppr.core.network.protocol.DrawActionMessage;
 import org.example.ooppr.core.network.protocol.Message;
 
-import java.awt.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -59,7 +57,7 @@ public class Server {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 
             // Send init data: actions, resolution and bc color
-            CanvasStateMessage init = new CanvasStateMessage(history, xResolution, yResolution, canvasColor);
+            CanvasStateMessage init = new CanvasStateMessage(history, xResolution, yResolution, canvasColor.toString());
             out.writeObject(init);
             out.flush();
 
