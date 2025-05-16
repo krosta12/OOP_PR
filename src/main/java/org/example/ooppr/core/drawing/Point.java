@@ -1,6 +1,8 @@
 package org.example.ooppr.core.drawing;
 
-public class Point {
+import java.io.Serializable;
+
+public class Point implements Serializable {
     double x, y;
     public Point(double x, double y) {
         this.x = x;

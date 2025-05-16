@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.example.ooppr.core.network.Client;
+import org.example.ooppr.core.network.Server;
 import org.example.ooppr.ui.managers.ColorPickerManager;
 import org.example.ooppr.ui.managers.PaintingZoneManager;
 import org.example.ooppr.ui.managers.ToolsManager;
@@ -103,6 +104,7 @@ public class ProductController implements Initializable {
     public void connectToHost(String ip, int port) {
         Client client = new Client();
         Client.connect(ip, port, paintingZoneManager);
+        paintingZoneManager.setClient( client, "abc" );
     }
 
 }
