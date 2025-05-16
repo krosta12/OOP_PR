@@ -11,6 +11,7 @@ import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.transform.Scale;
 import org.example.ooppr.core.drawing.DrawAction;
+import org.example.ooppr.core.network.Client;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,8 @@ public class PaintingZoneManager {
     private DrawAction currentAction = null;
 
     private Color defaultBCColor;
+    private Client client;
+    private String nickname;
 
 
     public void setCanvas(Canvas canvas) {
@@ -203,6 +206,11 @@ public class PaintingZoneManager {
 
     private void handleMouseReleased(MouseEvent event) {
         if( currentAction != null ) {
+
+            if( client != null ) {
+                client.sendDrawAction(currentAction, "test");
+            }
+
             actionsHistory.add(currentAction);
             currentAction = null;
         }
@@ -258,8 +266,17 @@ public class PaintingZoneManager {
     }
 
     public void drawByDrawAction(DrawAction action) {
-        Color lastColor = selectedColor;
-        action.draw(gc);
-        gc.setFill(lastColor);
+        System.out.println( "DRAWING" );
+        Platform.runLater( () -> {
+            Color lastColor = selectedColor;
+            action.draw(gc);
+            gc.setFill(lastColor);
+        } );
+
+    }
+
+    public void setClient( Client client, String nickname ) {
+        this.client = client;
+        this.nickname = nickname;
     }
 }

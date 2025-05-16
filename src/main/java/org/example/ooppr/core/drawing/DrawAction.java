@@ -11,7 +11,7 @@ import java.util.List;
 
 public class DrawAction implements Serializable {
     private final List<Point> points = new ArrayList<>();
-    private final String colorWeb; // TODO color serialization
+    private final String colorWeb;
     private final double brushSize;
     private final char toolType; // 'b' - brush, 'l' - eraser
 

@@ -12,17 +12,17 @@ import java.net.*;
 public class Client {
 
 
-    private Socket socket;
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
+    private static Socket socket;
+    private static ObjectOutputStream out;
+    private static ObjectInputStream in;
 
     //WARN DOC
     public static void connect(String ip, int port, PaintingZoneManager paintingZoneManager) {
         new Thread(() -> { //WARN RECHECK ARROW FUNC //WARN RECHECK MEMORY AFTER NEW OBJECT
-            try ( Socket socket = new Socket(ip, port);
-                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream())
-            ) {
+            try {
+                socket = new Socket(ip, port);
+                out = new ObjectOutputStream(socket.getOutputStream());
+                in = new ObjectInputStream(socket.getInputStream());
 
                 Object msg = in.readObject();
 
@@ -46,6 +46,7 @@ public class Client {
                 }
 
                 while (true) { // getting all new DrawActions
+                    System.out.println( "CLIENT received new drawing message" );
                     DrawAction action = (DrawAction) in.readObject();
                     paintingZoneManager.drawByDrawAction(action);
                 }
@@ -63,6 +64,7 @@ public class Client {
             out.flush();
         } catch (IOException e) { //WARN TRANSLATE
             System.out.println("! Failed to send message");
+            System.out.println( e.getMessage() );
         }
     }
 }
