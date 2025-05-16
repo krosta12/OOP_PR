@@ -17,8 +17,6 @@ public class Server {
     private int port;
     private String ip;
     private boolean isStarted = false;
-    private final Set<ObjectOutputStream> clientStreams = ConcurrentHashMap.newKeySet();
-
     private final Map<User, ObjectOutputStream> users = new HashMap<>();
 
     private final List<DrawAction> history = new ArrayList<>();
@@ -110,9 +108,9 @@ public class Server {
             try {
                 users.get(client).writeObject(msg);
                 users.get(client).flush();
-                System.out.println( "[SERVER] broadcast: " + client.getNickname() );
+                System.out.println( "[SERVER] broadcast to " + client.getNickname() );
             } catch (IOException e) {
-                System.out.println("! Broadcast error: " + e.getMessage());
+                System.out.println("[SERVER] !Broadcast error: " + e.getMessage());
             }
         }
     }

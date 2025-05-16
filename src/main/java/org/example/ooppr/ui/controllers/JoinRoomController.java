@@ -44,30 +44,36 @@ public class JoinRoomController {
      * The method switches the scene to Product. Checks the sizes of the passed canvas XResolutionHolder and YResolutionHolder.
      */
     public void SwitchToPaintPanel(ActionEvent event) throws IOException {
+
         String ip;
         int port;
-        String nickname = nicknameHolder.getText();
-        User user = new User( nickname, Role.VIEW_ONLY );
+
         try { // Get ip address and port by user input
+
+            String nickname = nicknameHolder.getText().trim();
             String ipAddress = ipHolder.getText();
-            if (ipAddress == null || ipAddress.isEmpty()) {
-                showAlert("IP error", "No IP entered", "Please enter the server IP address.");
-                return;
-            } else if( nickname.trim().isEmpty() ) {
-                showAlert("Nickname error", "No nickname entered", "Please enter the nickname.");
-                return;
-            } else {
-                String[] parts = ipAddress.split(":");
-                ip = parts[0];
-                port = Integer.parseInt(parts[1]);
-                if( port >= 65535 ) {
-                    showAlert( "Port value error", "Invalid port", "Please input valid port value" );
-                    return;
-                }
-            };
+
+            // Checking all user input
+            if (ipAddress == null || ipAddress.isEmpty())
+                throw new IllegalArgumentException( "No IP entered" );
+
+            if( nickname.isEmpty() )
+                throw new IllegalArgumentException( "No nickname entered" );
+
+
+            String[] parts = ipAddress.split(":");
+            if( parts.length != 2 )
+                throw new IllegalArgumentException( "IP must be in the format IP:PORT" );
+
+            ip = parts[0];
+            port = Integer.parseInt(parts[1]);
+            if( port < 0 || port > 65525 )
+                throw new IllegalArgumentException( "Port must be between 0 and 65535" );
+
+            // Create user
+            User user = new User( nickname, Role.VIEW_ONLY );
 
             // Connect to server
-            // Open local paint panel as Client
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/ooppr/Product.fxml"));
             root = loader.load();
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -81,20 +87,15 @@ public class JoinRoomController {
             stage.show();
 
 
-        } catch (NumberFormatException e) {
-            showAlert("Input error", "Invalid input!", "Please input integer values.");
+        } catch ( NumberFormatException e ) {
+            showAlert("Port value error", "Non-integer value", "Please input integer values.");
+        } catch ( IllegalArgumentException e ) {
+            showAlert( "Input error", e.getMessage(), "Please check your input." );
+        } catch ( Exception e ) {
+            showAlert( "Unknown error", "Something went wrong...\nDescription below: ", e.getMessage() );
         }
     }
 
-    /**
-     * The method checks the validity of the canvas size
-     * @param xResolution canvas x resolution (width)
-     * @param yResolution canvas y resolution (height)
-     * @return true if valid, false if not
-     */
-    private boolean resolutionIsValid(int xResolution, int yResolution) {
-        return xResolution > 0 && yResolution > 0;
-    }
 
     /**
      * The method shows alerts
