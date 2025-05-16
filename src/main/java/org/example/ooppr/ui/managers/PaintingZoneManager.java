@@ -15,6 +15,7 @@ import org.example.ooppr.core.network.Client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PaintingZoneManager {
     private Canvas canvas;
@@ -208,7 +209,7 @@ public class PaintingZoneManager {
         if( currentAction != null ) {
 
             if( client != null ) {
-                client.sendDrawAction(currentAction, "test");
+                client.sendDrawAction(currentAction, nickname);
             }
 
             actionsHistory.add(currentAction);
@@ -220,12 +221,12 @@ public class PaintingZoneManager {
 
     /**
      * Undoing last drawing action
-     * @param bc default background color
      */
-    public void undoLastAction(Color bc) {
+    public void undoLastAction( String undoerNickname ) {
         if(!actionsHistory.isEmpty()) {
+            System.out.println( "UNDOING" );
             actionsHistory.removeLast();
-            redrawAll(bc);
+            redrawAll( defaultBCColor );
         }
     }
 
@@ -250,7 +251,9 @@ public class PaintingZoneManager {
             if (newScene != null) {
                 newScene.setOnKeyPressed(event -> {
                     if (event.isControlDown() && event.getCode().toString().equals("Z")) {
-                        undoLastAction(defaultBCColor);
+                        undoLastAction( nickname );
+                        client.undo( nickname );
+                        System.out.println( "CTRL+Z" );
                     }
                 });
             }
@@ -265,14 +268,16 @@ public class PaintingZoneManager {
         this.defaultBCColor = color;
     }
 
-    public void drawByDrawAction(DrawAction action) {
-        System.out.println( "DRAWING" );
+    public void drawByDrawAction(DrawAction action, String actionerNicknane) {
+
+        if(!Objects.equals(nickname, actionerNicknane)) {
+            actionsHistory.add( action );
+        }
         Platform.runLater( () -> {
             Color lastColor = selectedColor;
             action.draw(gc);
             gc.setFill(lastColor);
         } );
-
     }
 
     public void setClient( Client client, String nickname ) {

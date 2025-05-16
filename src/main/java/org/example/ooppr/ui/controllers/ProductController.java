@@ -66,7 +66,6 @@ public class ProductController implements Initializable {
         paintingZoneManager.setupDrawing();
         paintingZoneManager.setupUndoHotkey();
 
-
         // Attaching buttons functionality
         ColorPickerManager colorPickerManager = new ColorPickerManager( paintingZoneManager );
         colorPickerManager.attachConstantColorToButton(TakeBlackColorConst, Color.BLACK);
@@ -92,18 +91,14 @@ public class ProductController implements Initializable {
         paintingZoneManager.initializeCanvas(XResolution, YResolution, fillColor.toString());
     }
 
-    public void initializeCanvasByHistory() {
-
-    }
-
     public void setIpPort(String ip, int port) {
         hostJoinLabel.setText( "Connected to server: ");
         ipPortLabel.setText( ip + ":" + port );
     }
 
     public void connectToHost(String ip, int port) {
-        Client client = new Client();
-        Client.connect(ip, port, paintingZoneManager);
+        Client client = new Client( paintingZoneManager );
+        client.connect(ip, port);
         paintingZoneManager.setClient( client, "abc" );
     }
 
