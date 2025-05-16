@@ -86,24 +86,6 @@ public class ProductController implements Initializable {
 
         // Connections info
         ConnectionsManager connectionsManager = new ConnectionsManager( connectionsWrapper );
-        connectionsManager.addUser( new User( "Bob", User.Role.CREATOR, LocalDateTime.now() ) );
-        connectionsManager.addUser( new User( "Anna", User.Role.ADMIN, LocalDateTime.now() ) );
-        connectionsManager.addUser( new User( "Oleg", User.Role.VIEW_ONLY, LocalDateTime.now() ) );
-        connectionsManager.addUser( new User( "Andrew", User.Role.CREATOR, LocalDateTime.now() ) );
-        connectionsManager.addUser( new User( "Alina", User.Role.ADMIN, LocalDateTime.now() ) );
-        connectionsManager.addUser( new User( "Aleksander", User.Role.EDIT, LocalDateTime.now() ) );
-        connectionsManager.addUser( new User( "Anastassia", User.Role.VIEW_ONLY, LocalDateTime.now() ) );
-        connectionsManager.addUser( new User( "Martin", User.Role.EDIT, LocalDateTime.now() ) );
-        connectionsManager.addUser( new User( "Katrin", User.Role.ADMIN, LocalDateTime.now() ) );
-
-        connectionsManager.addUser( new User( "Anna", User.Role.ADMIN, LocalDateTime.now() ) );
-        connectionsManager.addUser( new User( "Oleg", User.Role.VIEW_ONLY, LocalDateTime.now() ) );
-        connectionsManager.addUser( new User( "Andrew", User.Role.CREATOR, LocalDateTime.now() ) );
-        connectionsManager.addUser( new User( "Alina", User.Role.ADMIN, LocalDateTime.now() ) );
-        connectionsManager.addUser( new User( "Aleksander", User.Role.EDIT, LocalDateTime.now() ) );
-        connectionsManager.addUser( new User( "Anastassia", User.Role.VIEW_ONLY, LocalDateTime.now() ) );
-        connectionsManager.addUser( new User( "Martin", User.Role.EDIT, LocalDateTime.now() ) );
-        connectionsManager.addUser( new User( "Katrin", User.Role.ADMIN, LocalDateTime.now() ) );
     }
 
 
