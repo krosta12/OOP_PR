@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.ooppr.core.network.Server;
+import org.example.ooppr.core.users.User;
 
 import java.io.IOException;
 
@@ -53,8 +54,12 @@ public class CreationInterfaceHostController {
                     return;
                 }
 
+                String nickname = "admin"; // TODO nickame dynamic choosing
+                User creatorUser = new User( nickname, User.Role.CREATOR );
+
                 final Server server = new Server(port, XResolution, YResolution, defaultColor);
                 new Thread(server::startHost).start(); // Start a server on new Thread WARN CHECK A MEMORY LEAK AFTER new
+                server.setCreator( creatorUser );
 
                 // Open local paint panel as Client
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/ooppr/Product.fxml"));
@@ -64,7 +69,7 @@ public class CreationInterfaceHostController {
                 ProductController productController = loader.getController();
                 productController.initializeCanvas(XResolution, YResolution, defaultColor);
                 productController.setIpPort( server.getIp(), server.getPort() );
-                productController.connectToHost( server.getIp(), server.getPort() );
+                productController.connectToHost( server.getIp(), server.getPort(), creatorUser );
 
                 scene = new Scene(root);
                 stage.setScene(scene);

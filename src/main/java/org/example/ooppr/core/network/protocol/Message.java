@@ -9,7 +9,7 @@ public abstract class Message implements Serializable {
         DRAW_ACTION,
         CANVAS_STATE,
         UNDO,
-        CHAT // TODO do we need it?
+        INIT_USER, CHAT // TODO do we need it?
     }
 
     private final MessageType type;
