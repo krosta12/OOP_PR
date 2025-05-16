@@ -30,6 +30,9 @@ public class CreationInterfaceHostController {
     public TextField YResolutionHolder;
 
     @FXML
+    public TextField nicknameHolder;
+
+    @FXML
     public ColorPicker StandartCanvasColorPicker;
 
     /**
@@ -42,10 +45,11 @@ public class CreationInterfaceHostController {
             int XResolution = Integer.parseInt(XResolutionHolder.getText());
             int YResolution = Integer.parseInt(YResolutionHolder.getText());
             int port = Integer.parseInt( portHolder.getText() );
+            String nickname = nicknameHolder.getText();
             Color defaultColor = StandartCanvasColorPicker.getValue();// Getting canvas default color
 
             // Creating server and client window
-            if (resolutionportIsValid(XResolution, YResolution, port)) { // checking is all data valid
+            if (resolutionportIsValid(XResolution, YResolution, port, nickname)) { // checking is all data valid
                 // Create server with canvas parameters
                 // checking given by user port
 
@@ -54,7 +58,6 @@ public class CreationInterfaceHostController {
                     return;
                 }
 
-                String nickname = "admin"; // TODO nickame dynamic choosing
                 User creatorUser = new User( nickname, User.Role.CREATOR );
 
                 final Server server = new Server(port, XResolution, YResolution, defaultColor);
@@ -88,8 +91,8 @@ public class CreationInterfaceHostController {
      * @param yResolution canvas y resolution (height)
      * @return true if valid, false if not
      */
-    private boolean resolutionportIsValid(int xResolution, int yResolution, int port) {
-        return xResolution > 0 && yResolution > 0 && port <= 65535 && port > 0;
+    private boolean resolutionportIsValid(int xResolution, int yResolution, int port, String nickname) {
+        return xResolution > 0 && yResolution > 0 && port <= 65535 && port > 0 && !nickname.trim().isEmpty();
     }
 
     /**

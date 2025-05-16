@@ -48,7 +48,6 @@ public class Server {
 
             while (isStarted) {
                 Socket socket = serverSocket.accept();
-                System.out.println("[SERVER] Client connected: " + socket.getRemoteSocketAddress());
                 new Thread(() -> handleClient(socket) ).start();
             }
         } catch (IOException e) {
@@ -64,7 +63,11 @@ public class Server {
             // Initializing user
             Object initUser = in.readObject();
             if( initUser instanceof InitUserMessage initUserMsg ){
-                users.put( initUserMsg.getUser(), out );
+                User user = initUserMsg.getUser();
+                users.put( user, out );
+                System.out.println("[SERVER] Client connected: " +
+                        socket.getRemoteSocketAddress().toString().substring(1) + " " +
+                        user.getNickname() );
             }
 
             // Send init data: actions, resolution and bc color

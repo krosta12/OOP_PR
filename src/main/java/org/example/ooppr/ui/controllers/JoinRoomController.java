@@ -15,12 +15,14 @@ import javafx.stage.Stage;
 import org.example.ooppr.core.network.Client;
 import org.example.ooppr.core.users.User;
 import org.example.ooppr.core.users.User.Role;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 
 public class JoinRoomController {
 
-    public TextField Nickname;
+    @FXML
+    public TextField nicknameHolder;
     private Scene scene;
     private Stage stage;
     private Parent root;
@@ -34,6 +36,7 @@ public class JoinRoomController {
     @FXML
     public ColorPicker StandartCanvasColorPicker;
 
+
     @FXML
     public TextField ipHolder;
 
@@ -43,12 +46,15 @@ public class JoinRoomController {
     public void SwitchToPaintPanel(ActionEvent event) throws IOException {
         String ip;
         int port;
-        String nickname = "guest"; // TODO nickname dynamic choosing
+        String nickname = nicknameHolder.getText();
         User user = new User( nickname, Role.VIEW_ONLY );
         try { // Get ip address and port by user input
             String ipAddress = ipHolder.getText();
             if (ipAddress == null || ipAddress.isEmpty()) {
                 showAlert("IP error", "No IP entered", "Please enter the server IP address.");
+                return;
+            } else if( nickname.trim().isEmpty() ) {
+                showAlert("Nickname error", "No nickname entered", "Please enter the nickname.");
                 return;
             } else {
                 String[] parts = ipAddress.split(":");
