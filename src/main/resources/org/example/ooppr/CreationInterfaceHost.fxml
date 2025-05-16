@@ -36,6 +36,10 @@
             <Separator prefHeight="10.0" prefWidth="200.0" visible="false" />
             <TextField fx:id="portHolder" maxWidth="200.0" styleClass="textField" text="27272" />
             <Separator prefHeight="20.0" prefWidth="200.0" visible="false" />
+            <Label alignment="CENTER" text="Choose nickname:" />
+            <Separator prefHeight="10.0" prefWidth="200.0" visible="false" />
+            <TextField fx:id="nicknameHolder" maxWidth="200.0" styleClass="textField" />
+            <Separator prefHeight="20.0" prefWidth="200.0" visible="false" />
             <Label alignment="CENTER" text="Resolution" />
             <Separator prefHeight="10.0" prefWidth="200.0" visible="false" />
              <HBox alignment="CENTER" maxWidth="390.0" styleClass="hbox-padding">
