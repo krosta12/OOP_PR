@@ -15,6 +15,7 @@ import org.example.ooppr.core.network.Server;
 import org.example.ooppr.core.users.User;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class CreationInterfaceHostController {
 
@@ -53,7 +54,7 @@ public class CreationInterfaceHostController {
             Color defaultColor = StandartCanvasColorPicker.getValue();// Getting canvas default color
 
             // Create user
-            User creatorUser = new User( nickname, User.Role.CREATOR );
+            User creatorUser = new User( nickname, User.Role.CREATOR, LocalDateTime.now() );
 
             // Create server
             final Server server = new Server(port, XResolution, YResolution, defaultColor);

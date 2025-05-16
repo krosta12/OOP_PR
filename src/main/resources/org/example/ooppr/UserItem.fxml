@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.ooppr.ui.controllers.UserItemController">
+    <Label fx:id="userNicknameLabel" text="User" textFill="#d4d4d4">
+        <font>
+            <Font size="16.0" />
+        </font></Label>
+    <Label fx:id="userRoleLabel" text="(role)" textFill="#d4d4d4" />
+    <MenuButton style="-fx-background-color: transparent;" text="⋮">
+        <items>
+            <MenuItem fx:id="kickUser" text="Kick" />
+            <MenuItem fx:id="banUser" text="Ban" />
+            <MenuItem fx:id="changeUserRole" text="Change Role" />
+        </items>
+    </MenuButton>
+</HBox>

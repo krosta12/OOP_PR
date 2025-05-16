@@ -4,16 +4,19 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.example.ooppr.core.network.Client;
 import org.example.ooppr.core.network.Server;
 import org.example.ooppr.core.users.User;
 import org.example.ooppr.ui.managers.ColorPickerManager;
+import org.example.ooppr.ui.managers.ConnectionsManager;
 import org.example.ooppr.ui.managers.PaintingZoneManager;
 import org.example.ooppr.ui.managers.ToolsManager;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 public class ProductController implements Initializable {
@@ -23,6 +26,7 @@ public class ProductController implements Initializable {
     //get canvas
     @FXML
     public Canvas paintingZone;
+    public VBox connectionsWrapper;
 
     //get color system buttons
     @FXML
@@ -79,6 +83,18 @@ public class ProductController implements Initializable {
         toolsManager.attachButton( TakeBrushButton, 'b' );
         toolsManager.attachButton( TakeLastikButton, 'l' );
         toolsManager.attachSlider( brushSizeSlider, NPixelsText );
+
+        // Connections info
+        ConnectionsManager connectionsManager = new ConnectionsManager( connectionsWrapper );
+        connectionsManager.addUser( new User( "Bob", User.Role.CREATOR, LocalDateTime.now() ) );
+        connectionsManager.addUser( new User( "Anna", User.Role.ADMIN, LocalDateTime.now() ) );
+        connectionsManager.addUser( new User( "Oleg", User.Role.VIEW_ONLY, LocalDateTime.now() ) );
+        connectionsManager.addUser( new User( "Andrew", User.Role.CREATOR, LocalDateTime.now() ) );
+        connectionsManager.addUser( new User( "Alina", User.Role.ADMIN, LocalDateTime.now() ) );
+        connectionsManager.addUser( new User( "Aleksander", User.Role.EDIT, LocalDateTime.now() ) );
+        connectionsManager.addUser( new User( "Anastassia", User.Role.VIEW_ONLY, LocalDateTime.now() ) );
+        connectionsManager.addUser( new User( "Martin", User.Role.EDIT, LocalDateTime.now() ) );
+        connectionsManager.addUser( new User( "Katrin", User.Role.ADMIN, LocalDateTime.now() ) );
     }
 
 
