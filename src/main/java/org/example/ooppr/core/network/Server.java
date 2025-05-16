@@ -5,6 +5,7 @@ import org.example.ooppr.core.drawing.DrawAction;
 import org.example.ooppr.core.network.protocol.CanvasStateMessage;
 import org.example.ooppr.core.network.protocol.DrawActionMessage;
 import org.example.ooppr.core.network.protocol.Message;
+import org.example.ooppr.core.network.protocol.UndoMessage;
 
 import java.io.*;
 import java.net.*;
@@ -39,11 +40,11 @@ public class Server {
         try (ServerSocket serverSocket = new ServerSocket(this.port)) {
             isStarted = true;
             ip = InetAddress.getLocalHost().getHostAddress();
-            System.out.println("* Server started at " + ip + ":" + port);
+            System.out.println("* Server started at " + ip + ":" + port + " *");
 
             while (isStarted) {
                 Socket socket = serverSocket.accept();
-                System.out.println("+ Client connected: " + socket.getRemoteSocketAddress());
+                System.out.println("[SERVER] Client connected: " + socket.getRemoteSocketAddress());
                 new Thread(() -> handleClient(socket) ).start();
             }
         } catch (IOException e) {
@@ -55,6 +56,7 @@ public class Server {
         try {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            clientStreams.add( out );
 
             // Send init data: actions, resolution and bc color
             CanvasStateMessage init = new CanvasStateMessage(history, xResolution, yResolution, canvasColor.toString());
@@ -63,16 +65,28 @@ public class Server {
 
             // Listening client
             while(true) {
+
                 Object data = in.readObject();
+
                 if( data instanceof DrawActionMessage drawMsg ) {
-                    DrawAction action = drawMsg.getDrawAction();
-                    history.add(action);
-                    broadcast( drawMsg );
+                    handleDrawActionMessage( drawMsg );
+                } else if ( data instanceof UndoMessage undoMsg ) {
+                    handleUndoMessage( undoMsg );
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println( "- Client disconnected: " );
+            System.out.println( "[SERVER] Client disconnected: " );
         }
+    }
+
+    private void handleDrawActionMessage( DrawActionMessage drawMsg ) {
+        DrawAction action = drawMsg.getDrawAction();
+        history.add(action);
+        broadcast( drawMsg );
+    }
+
+    private void handleUndoMessage( UndoMessage undoMsg ) {
+        //broadcast( undoMsg );
     }
 
 
@@ -84,6 +98,7 @@ public class Server {
             try {
                 clientStream.writeObject(msg);
                 clientStream.flush();
+                System.out.println( "[SERVER] broadcast" );
             } catch (IOException e) {
                 System.out.println("! Broadcast error: " + e.getMessage());
             }

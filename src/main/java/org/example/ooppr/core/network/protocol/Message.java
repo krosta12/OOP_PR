@@ -8,6 +8,7 @@ public abstract class Message implements Serializable {
     public enum MessageType {
         DRAW_ACTION,
         CANVAS_STATE,
+        UNDO,
         CHAT // TODO do we need it?
     }
 

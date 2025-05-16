@@ -3,9 +3,11 @@ package org.example.ooppr.core.network.protocol;
 import javafx.scene.paint.Color;
 import org.example.ooppr.core.drawing.DrawAction;
 
+import java.io.Serial;
 import java.util.List;
 
 public class CanvasStateMessage extends Message{
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final List<DrawAction> actions;
