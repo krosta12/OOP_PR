@@ -18,6 +18,7 @@ import org.example.ooppr.core.users.User.Role;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class JoinRoomController {
 
@@ -71,7 +72,7 @@ public class JoinRoomController {
                 throw new IllegalArgumentException( "Port must be between 0 and 65535" );
 
             // Create user
-            User user = new User( nickname, Role.VIEW_ONLY );
+            User user = new User( nickname, Role.VIEW_ONLY, LocalDateTime.now() );
 
             // Connect to server
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/ooppr/Product.fxml"));

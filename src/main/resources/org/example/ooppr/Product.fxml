@@ -40,6 +40,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
@@ -97,17 +98,24 @@
                         <Label fx:id="hostJoinLabel" style="-fx-text-fill: #D4D4D4;" text="host/join">
                            <font>
                               <Font size="16.0" />
-                           </font></Label>
+                           </font>
+                        </Label>
                         <Label fx:id="ipPortLabel" style="-fx-text-fill: #D4D4D4;" text="ip">
                            <font>
                               <Font size="16.0" />
-                           </font></Label>
+                           </font>
+                        </Label>
                         <Separator opacity="0.0" prefHeight="15.0" prefWidth="200.0" />
                         <Label fx:id="ConnectionsInfo" style="-fx-text-fill: D4D4D4;" text="Connections info">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
                         </Label>
+                        <VBox spacing="5.0" fx:id="connectionsWrapper">
+                           <children>
+
+                           </children>
+                        </VBox>
                      </children>
                      <padding>
                         <Insets bottom="15.0" left="15.0" top="15.0" />
