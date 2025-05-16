@@ -1,20 +1,33 @@
 package org.example.ooppr.core.users;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     private final String nickname;
+    private Role role;
 
-    public User(String nickname) {
+    public enum Role {
+        ADMIN,
+        VIEW_ONLY,
+        EDIT,
+        CREATOR
+    }
+
+    public User(String nickname, Role role) {
         this.nickname = nickname;
     }
 
-    private enum role {
-        ADMIN,
-        VIEW_ONLY,
-        EDIT
-    }
     public String getNickname() {
         return this.nickname;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole( Role newRole ) {
+        this.role = newRole;
     }
 
 }

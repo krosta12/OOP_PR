@@ -4,7 +4,9 @@ import org.example.ooppr.Server.Data;
 import org.example.ooppr.core.drawing.DrawAction;
 import org.example.ooppr.core.network.protocol.CanvasStateMessage;
 import org.example.ooppr.core.network.protocol.DrawActionMessage;
+import org.example.ooppr.core.network.protocol.InitUserMessage;
 import org.example.ooppr.core.network.protocol.UndoMessage;
+import org.example.ooppr.core.users.User;
 import org.example.ooppr.ui.managers.PaintingZoneManager;
 
 import java.io.*;
@@ -24,7 +26,7 @@ public class Client {
     }
 
     //WARN DOC
-    public void connect(String ip, int port) {
+    public void connect(String ip, int port, User user ) {
         new Thread(() -> { //WARN RECHECK ARROW FUNC //WARN RECHECK MEMORY AFTER NEW OBJECT
             try {
                 socket = new Socket(ip, port);
@@ -32,7 +34,9 @@ public class Client {
                 in = new ObjectInputStream(socket.getInputStream());
 
                 // First OUT message
-                // TODO first message
+                InitUserMessage initUserMsg = new InitUserMessage( user );
+                out.writeObject( initUserMsg );
+                out.flush();
 
                 // First message - initialization
                 Object msg = in.readObject();

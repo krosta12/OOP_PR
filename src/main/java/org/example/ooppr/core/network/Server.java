@@ -2,10 +2,8 @@ package org.example.ooppr.core.network;
 
 import javafx.scene.paint.Color;
 import org.example.ooppr.core.drawing.DrawAction;
-import org.example.ooppr.core.network.protocol.CanvasStateMessage;
-import org.example.ooppr.core.network.protocol.DrawActionMessage;
-import org.example.ooppr.core.network.protocol.Message;
-import org.example.ooppr.core.network.protocol.UndoMessage;
+import org.example.ooppr.core.network.protocol.*;
+import org.example.ooppr.core.users.User;
 
 import java.io.*;
 import java.net.*;
@@ -20,6 +18,9 @@ public class Server {
     private String ip;
     private boolean isStarted = false;
     private final Set<ObjectOutputStream> clientStreams = ConcurrentHashMap.newKeySet();
+
+    private final Map<User, ObjectOutputStream> users = new HashMap<>();
+
     private final List<DrawAction> history = new ArrayList<>();
 
 
@@ -27,6 +28,9 @@ public class Server {
     private int xResolution;
     private int yResolution;
     private Color canvasColor;
+
+    // User roles
+    private User creator;
 
     //WARN WRITE A DOC
     public Server(int port, int xResolution, int yResolution, Color canvasColor) {
@@ -56,7 +60,12 @@ public class Server {
         try {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            clientStreams.add( out );
+
+            // Initializing user
+            Object initUser = in.readObject();
+            if( initUser instanceof InitUserMessage initUserMsg ){
+                users.put( initUserMsg.getUser(), out );
+            }
 
             // Send init data: actions, resolution and bc color
             CanvasStateMessage init = new CanvasStateMessage(history, xResolution, yResolution, canvasColor.toString());
@@ -66,11 +75,11 @@ public class Server {
             // Listening client
             while(true) {
 
-                Object data = in.readObject();
+                Object msg = in.readObject();
 
-                if( data instanceof DrawActionMessage drawMsg ) {
+                if( msg instanceof DrawActionMessage drawMsg ) {
                     handleDrawActionMessage( drawMsg );
-                } else if ( data instanceof UndoMessage undoMsg ) {
+                } else if ( msg instanceof UndoMessage undoMsg ) {
                     handleUndoMessage( undoMsg );
                 }
             }
@@ -94,11 +103,11 @@ public class Server {
      * Broadcasting all data to all Clients (echo)
      */
     private void broadcast(Message msg) {
-        for (ObjectOutputStream clientStream : clientStreams) {
+        for ( User client : users.keySet()) {
             try {
-                clientStream.writeObject(msg);
-                clientStream.flush();
-                System.out.println( "[SERVER] broadcast" );
+                users.get(client).writeObject(msg);
+                users.get(client).flush();
+                System.out.println( "[SERVER] broadcast: " + client.getNickname() );
             } catch (IOException e) {
                 System.out.println("! Broadcast error: " + e.getMessage());
             }
@@ -124,5 +133,9 @@ public class Server {
 
     public int getPort() {
         return this.port;
+    }
+
+    public void setCreator(User creatorUser) {
+        this.creator = creatorUser;
     }
 }

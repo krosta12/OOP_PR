@@ -13,6 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.ooppr.core.network.Client;
+import org.example.ooppr.core.users.User;
+import org.example.ooppr.core.users.User.Role;
 
 import java.io.IOException;
 
@@ -41,6 +43,8 @@ public class JoinRoomController {
     public void SwitchToPaintPanel(ActionEvent event) throws IOException {
         String ip;
         int port;
+        String nickname = "guest"; // TODO nickname dynamic choosing
+        User user = new User( nickname, Role.VIEW_ONLY );
         try { // Get ip address and port by user input
             String ipAddress = ipHolder.getText();
             if (ipAddress == null || ipAddress.isEmpty()) {
@@ -64,7 +68,7 @@ public class JoinRoomController {
 
             ProductController productController = loader.getController();
             productController.setIpPort( ip, port );
-            productController.connectToHost( ip, port );
+            productController.connectToHost( ip, port, user );
 
             scene = new Scene(root);
             stage.setScene(scene);
