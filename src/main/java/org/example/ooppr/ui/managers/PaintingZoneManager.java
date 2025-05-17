@@ -18,6 +18,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class PaintingZoneManager {
+
+    //sendThreshold модет просадить сервер пожтому нужно найти оптимальное значени или изменять его поп мере прибавления кливентов по формуле квадратов чтоб не повесить сервер
+    private final double sendThreshold = 20;      // Переменная мат. шага по длинне вектора относительно начальной точки - меньше значнеие - большая плотность обновления но и большее колличество пакетов
+    private double lastSentX, lastSentY; // точка начала вектора
+
+
+
     private Canvas canvas;
     private GraphicsContext gc;
 
@@ -36,7 +43,10 @@ public class PaintingZoneManager {
 
     // -- DRAWING HISTORY --
     private final List<DrawAction> actionsHistory = new ArrayList<>();
-    private DrawAction currentAction = null;
+
+    private DrawAction fullAction;      // накопит все точки для истории чтоб передача была частичной но откат полным
+    private DrawAction fragmentAction;  // будет сбрасываться после каждой отправки
+
 
     private Color defaultBCColor;
     private Client client;
@@ -111,7 +121,7 @@ public class PaintingZoneManager {
     public void setupDrawing() {
         canvas.setOnMousePressed(this::handleMousePressed);
         canvas.setOnMouseDragged(this::handleMouseDragged);
-        canvas.setOnMouseReleased(this::handleMouseReleased);
+        canvas.setOnMouseReleased(this::handleMouseReleased); //get as warn
     }
 
     /**
@@ -124,8 +134,16 @@ public class PaintingZoneManager {
         lastX = event.getX();
         lastY = event.getY();
 
-        // saving current action
-        currentAction = new DrawAction(selectedColor.toString(), brushSize, selectedTool);
+        lastSentX = lastX;// задаём точку начала от которой считаем векторное растояние
+        lastSentY = lastY;
+
+        // saving current action in 2 var-s for backtracking after packt distibution
+        fullAction = new DrawAction(selectedColor.toString(), brushSize, selectedTool);
+        fragmentAction = new DrawAction(selectedColor.toString(), brushSize, selectedTool);
+
+
+        fullAction.addPoint(lastX, lastY);
+        fragmentAction.addPoint(lastX, lastY);
 
         // draw point on canvas
         drawPoint(lastX, lastY);
@@ -158,12 +176,25 @@ public class PaintingZoneManager {
         double currentX = event.getX();
         double currentY = event.getY();
 
-        // saving current point
-        if( currentAction != null ) {
-            currentAction.addPoint(currentX, currentY);
+        // saving current point as parts
+        if (fullAction != null) {
+            fullAction.addPoint(currentX, currentY);
+            fragmentAction.addPoint(currentX, currentY);
         }
 
         drawLine(lastX, lastY, currentX, currentY);
+
+        double dx = currentX - lastSentX; //дельта на каждую ось для подсчёта длинны
+        double dy = currentY - lastSentY;
+
+        if (Math.hypot(dx, dy) >= sendThreshold) { // мат. вект. длинна сравниваем с шагом на каждом фрейме обновления позиции мышки
+            client.sendDrawAction(fragmentAction, nickname); // елсли изменения существенны
+            fragmentAction = new DrawAction(selectedColor.toString(), brushSize, selectedTool);
+            fragmentAction.addPoint(currentX, currentY);
+            lastSentX = currentX; //обновляем позиции точки для нового построяния вектора
+            lastSentY = currentY;
+        }
+
         lastX = currentX;
         lastY = currentY;
     }
@@ -206,14 +237,15 @@ public class PaintingZoneManager {
     }
 
     private void handleMouseReleased(MouseEvent event) {
-        if( currentAction != null ) {
+        if( fullAction != null ) {
 
             if( client != null ) {
-                client.sendDrawAction(currentAction, nickname);
+                client.sendDrawAction(fragmentAction, nickname); //мы отправим кусок рисунка а не весь чтоб не накладывать их друг на друга
             }
 
-            actionsHistory.add(currentAction);
-            currentAction = null;
+            actionsHistory.add(fullAction); // добавим ЦЕЛУЮ фигуру чтоб откат был не по частям
+            fullAction = null; // закончить процесс рисования
+            fragmentAction = null;
         }
     }
 
