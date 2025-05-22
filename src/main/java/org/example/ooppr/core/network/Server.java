@@ -85,6 +85,15 @@ public class Server {
                     handleDrawActionMessage( drawMsg );
                 } else if ( msg instanceof UndoMessage undoMsg ) {
                     handleUndoMessage( undoMsg );
+                } else if( msg instanceof DisconnectMessage disconnMsg ) {
+
+                    for( User u : users.keySet() ) { // checking disconnected user nickname and removing it from all users list
+                        if( u.getNickname().equals( disconnMsg.getUser().getNickname() ) ) {
+                            users.remove( u );
+                        }
+                    }
+                    // broadcast to other users
+                    broadcast( new UserDisconnectedMessage( users.keySet().stream().toList() ) );
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -107,14 +116,24 @@ public class Server {
      * Broadcasting all data to all Clients (echo)
      */
     private void broadcast(Message msg) {
+
+        List<User> disconnected = new ArrayList<>();
+
         for ( User client : users.keySet()) {
             try {
                 users.get(client).writeObject(msg);
                 users.get(client).flush();
                 System.out.println( "[SERVER] broadcast to " + client.getNickname() );
             } catch (IOException e) {
-                System.out.println("[SERVER] !Broadcast error: " + e.getMessage());
+                System.out.println("[SERVER] !Broadcast error to " + client.getNickname() + ": " + e.getMessage());
+                disconnected.add( client );
+
             }
+        }
+
+        for( User client : disconnected ) {
+            users.remove( client );
+            System.out.println( "[SERVER] Removed disconnected user: " + client.getNickname() );
         }
     }
 

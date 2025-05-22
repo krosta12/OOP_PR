@@ -19,6 +19,8 @@ public class Client {
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
+    private Thread clientThread;
+
     private final PaintingZoneManager paintingZoneManager;
     private final ConnectionsManager connectionsManager;
 
@@ -29,7 +31,7 @@ public class Client {
 
     //WARN DOC
     public void connect(String ip, int port, User user ) {
-        new Thread(() -> { //WARN RECHECK ARROW FUNC //WARN RECHECK MEMORY AFTER NEW OBJECT
+        clientThread = new Thread(() -> { //WARN RECHECK ARROW FUNC //WARN RECHECK MEMORY AFTER NEW OBJECT
             try {
                 socket = new Socket(ip, port);
                 out = new ObjectOutputStream(socket.getOutputStream());
@@ -78,6 +80,7 @@ public class Client {
                         Platform.runLater( () -> connectionsManager.setList( userConnectedMessage.getNewUsersList() ));
                     } else if ( data instanceof UserDisconnectedMessage userDisconnectedMessage ) {
                         // show toast message?
+                        System.out.println( "[CLIENT] disconnected" );
                         Platform.runLater( () -> connectionsManager.setList( userDisconnectedMessage.getNewUsersList() ));
 
                     }
@@ -85,7 +88,9 @@ public class Client {
             } catch (Exception e) {
                 System.out.println("[CLIENT] Error: " + e.getMessage());
             }
-        }).start(); //WARN CHECK IS SERVER STOP AFTER START
+        });
+        clientThread.setDaemon(true);
+        clientThread.start();
     }
 
     //WARN DOC
@@ -100,6 +105,16 @@ public class Client {
         }
     }
 
+    private void sendDisconnectMessage( User user ) {
+        try {
+            DisconnectMessage disconnectMessage = new DisconnectMessage( user );
+            out.writeObject(disconnectMessage);
+            out.flush();
+        } catch (IOException e) {
+            System.out.println( "[CLIENT] ! Failed to send disconnection message: " + e.getMessage() );
+        }
+    }
+
     public void undo( String nickname ) {
         try {
             UndoMessage msg = new UndoMessage( nickname );
@@ -109,4 +124,20 @@ public class Client {
             System.out.println( "[CLIENT] UNDO exception: " + e.getMessage());
         }
     }
+
+    public void disconnect( User user )  {
+        try {
+            if( socket != null && !socket.isClosed() ) {
+                sendDisconnectMessage( user );
+                socket.close();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        if( clientThread != null && clientThread.isAlive() ) {
+            clientThread.interrupt();
+        }
+    }
+
 }

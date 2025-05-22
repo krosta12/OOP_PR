@@ -13,6 +13,7 @@ public abstract class Message implements Serializable {
         USERS_LIST,
         USER_CONNECTED,
         USER_DISCONNECTED,
+        USER_DISCONNECT,
         CHAT // TODO do we need it?
     }
 
