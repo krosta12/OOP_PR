@@ -1,16 +1,16 @@
 package org.example.ooppr.core.network;
 
+import javafx.application.Platform;
 import org.example.ooppr.Server.Data;
 import org.example.ooppr.core.drawing.DrawAction;
-import org.example.ooppr.core.network.protocol.CanvasStateMessage;
-import org.example.ooppr.core.network.protocol.DrawActionMessage;
-import org.example.ooppr.core.network.protocol.InitUserMessage;
-import org.example.ooppr.core.network.protocol.UndoMessage;
+import org.example.ooppr.core.network.protocol.*;
 import org.example.ooppr.core.users.User;
+import org.example.ooppr.ui.managers.ConnectionsManager;
 import org.example.ooppr.ui.managers.PaintingZoneManager;
 
 import java.io.*;
 import java.net.*;
+import java.util.List;
 
 public class Client {
 
@@ -20,9 +20,11 @@ public class Client {
     private ObjectInputStream in;
 
     private final PaintingZoneManager paintingZoneManager;
+    private final ConnectionsManager connectionsManager;
 
-    public Client( PaintingZoneManager paintingZoneManager ) {
+    public Client( PaintingZoneManager paintingZoneManager, ConnectionsManager connectionsManager ) {
         this.paintingZoneManager = paintingZoneManager;
+        this.connectionsManager = connectionsManager;
     }
 
     //WARN DOC
@@ -38,8 +40,14 @@ public class Client {
                 out.writeObject( initUserMsg );
                 out.flush();
 
-                // First message - initialization
+                // Get connected users list
                 Object msg = in.readObject();
+                if( msg instanceof UsersListMessage usersListMessage ) {
+                    connectionsManager.setList( usersListMessage.getConnectedUsers() );
+                }
+
+                // Canvas initialization
+                msg = in.readObject();
 
                 if( msg instanceof CanvasStateMessage canvasMsg) {
                     paintingZoneManager.initializeCanvas(
@@ -65,6 +73,8 @@ public class Client {
 
                     } else if ( data instanceof UndoMessage undoMsg ) {
                         paintingZoneManager.undoLastAction( undoMsg.getNickname() );
+                    } else if ( data instanceof UsersListMessage connUsersListMess) {
+                        Platform.runLater( () -> connectionsManager.setList( connUsersListMess.getConnectedUsers() ));
                     }
                 }
             } catch (Exception e) {
