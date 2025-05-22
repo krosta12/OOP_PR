@@ -58,36 +58,21 @@ public class ConnectionsManager {
         }
     }
 
+    /**
+     * Sorts list of users for correct displaying
+     * @return sorted list of users
+     */
     private List<User> getSortedUsers() {
         return connectedUsers.stream()
                 .sorted((u1, u2) -> {
-                    int rolePriority1 = getRolePriority(u1.getRole());
-                    int rolePriority2 = getRolePriority(u2.getRole());
+                    int rolePriority1 = u1.getRolePriority();
+                    int rolePriority2 = u2.getRolePriority();
 
                     if( rolePriority1 != rolePriority2 )
                         return Integer.compare( rolePriority1, rolePriority2 );
                     else
                         return u1.getConnectionTime().compareTo( u2.getConnectionTime() );
         }).collect( Collectors.toList() );
-    }
-
-    /**
-     * Filtering roles by priority (CREATOR first, then ADMIN, EDIT, VIEW_ONLY and other)
-     * @param role Role
-     * @return Priority value
-     */
-    private int getRolePriority( User.Role role ) {
-        if ( role == null ) return 999;
-
-        return switch( role ) {
-            case CREATOR -> 0;
-            case ADMIN -> 1;
-            case EDIT -> 2;
-            case VIEW_ONLY -> 3;
-            default -> 999;
-        };
-
-
     }
 
 }
