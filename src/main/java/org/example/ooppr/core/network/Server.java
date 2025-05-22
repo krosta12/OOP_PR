@@ -67,6 +67,9 @@ public class Server {
                         socket.getRemoteSocketAddress().toString().substring(1) + " " +
                         user.getNickname() );
             }
+            // Send user list message
+            UsersListMessage connUsersListMess = new UsersListMessage( users.keySet().stream().toList() );
+            broadcast( connUsersListMess );
 
             // Send init data: actions, resolution and bc color
             CanvasStateMessage init = new CanvasStateMessage(history, xResolution, yResolution, canvasColor.toString());

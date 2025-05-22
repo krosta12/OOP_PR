@@ -57,6 +57,7 @@ public class ProductController implements Initializable {
     private Label ipPortLabel;
 
     private final PaintingZoneManager paintingZoneManager = new PaintingZoneManager();
+    private ConnectionsManager connectionsManager;
 
 
     /**
@@ -85,7 +86,7 @@ public class ProductController implements Initializable {
         toolsManager.attachSlider( brushSizeSlider, NPixelsText );
 
         // Connections info
-        ConnectionsManager connectionsManager = new ConnectionsManager( connectionsWrapper );
+
     }
 
 
@@ -105,7 +106,8 @@ public class ProductController implements Initializable {
     }
 
     public void connectToHost(String ip, int port, User user ) {
-        Client client = new Client( paintingZoneManager );
+        connectionsManager = new ConnectionsManager( connectionsWrapper );
+        Client client = new Client( paintingZoneManager, connectionsManager );
         client.connect(ip, port, user);
         paintingZoneManager.setClient( client, "abc" );
     }

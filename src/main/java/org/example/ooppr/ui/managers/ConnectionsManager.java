@@ -29,6 +29,10 @@ public class ConnectionsManager {
         refreshList();
     }
 
+    private void clearList() {
+        connectedUsers.clear();
+    }
+
     public List<User> getConnectedUsers() {
         return connectedUsers;
     }
@@ -75,4 +79,9 @@ public class ConnectionsManager {
         }).collect( Collectors.toList() );
     }
 
+    public void setList(List<User> connectedUsersList) {
+        clearList();
+        connectedUsers.addAll(connectedUsersList);
+        refreshList();
+    }
 }
