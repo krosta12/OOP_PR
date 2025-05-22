@@ -80,6 +80,7 @@ public class JoinRoomController {
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
             ProductController productController = loader.getController();
+            productController.setStage( stage );
             productController.setIpPort( ip, port );
             productController.connectToHost( ip, port, user );
 

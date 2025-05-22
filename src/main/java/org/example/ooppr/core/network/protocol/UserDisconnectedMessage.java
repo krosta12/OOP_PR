@@ -8,7 +8,7 @@ public class UserDisconnectedMessage extends Message {
 
     private final List<User> newUsersList;
 
-    protected UserDisconnectedMessage(List<User> newUsersList) {
+    public UserDisconnectedMessage(List<User> newUsersList) {
         super(MessageType.USER_DISCONNECTED);
         this.newUsersList = newUsersList;
     }

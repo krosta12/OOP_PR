@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.example.ooppr.core.network.Client;
 import org.example.ooppr.core.network.Server;
 import org.example.ooppr.core.users.User;
@@ -59,6 +60,10 @@ public class ProductController implements Initializable {
     private final PaintingZoneManager paintingZoneManager = new PaintingZoneManager();
     private ConnectionsManager connectionsManager;
 
+    private Stage stage;
+    private Client client;
+    private User user;
+
 
     /**
      * initialize an event handlers components for painting zone
@@ -107,9 +112,21 @@ public class ProductController implements Initializable {
 
     public void connectToHost(String ip, int port, User user ) {
         connectionsManager = new ConnectionsManager( connectionsWrapper );
-        Client client = new Client( paintingZoneManager, connectionsManager );
+        this.client = new Client( paintingZoneManager, connectionsManager );
+        this.user = user;
         client.connect(ip, port, user);
         paintingZoneManager.setClient( client, "abc" );
     }
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+        this.stage.setOnCloseRequest( e -> {
+            closeProgram();
+        } );
+    }
+
+    private void closeProgram() {
+        if( client != null )
+            client.disconnect( user );
+    }
 }
