@@ -121,12 +121,33 @@ public class ProductController implements Initializable {
     public void setStage(Stage stage) {
         this.stage = stage;
         this.stage.setOnCloseRequest( e -> {
-            closeProgram();
+            boolean exit = askUserAlert();
+            if( exit )
+                closeProgram();
+            else
+                e.consume();
         } );
     }
 
+    /**
+     * Closing socket and exiting program
+     */
     private void closeProgram() {
         if( client != null )
             client.disconnect( user );
+    }
+
+    /**
+     * Asking user for exiting confirmation
+     * @return boolean does user want to exit
+     */
+    private boolean askUserAlert() {
+        Alert alert = new Alert( Alert.AlertType.CONFIRMATION );
+        alert.setTitle( "Confirm exit" );
+        alert.setHeaderText(null);
+        alert.setContentText( "Are you sure you wanna exit?" );
+        ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
+
+        return result == ButtonType.OK;
     }
 }
