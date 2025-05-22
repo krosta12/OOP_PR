@@ -68,8 +68,8 @@ public class Server {
                         user.getNickname() );
             }
             // Send user list message
-            UsersListMessage connUsersListMess = new UsersListMessage( users.keySet().stream().toList() );
-            broadcast( connUsersListMess );
+            UserConnectedMessage userConnectedMessage = new UserConnectedMessage( users.keySet().stream().toList() );
+            broadcast( userConnectedMessage );
 
             // Send init data: actions, resolution and bc color
             CanvasStateMessage init = new CanvasStateMessage(history, xResolution, yResolution, canvasColor.toString());

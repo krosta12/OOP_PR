@@ -42,8 +42,8 @@ public class Client {
 
                 // Get connected users list
                 Object msg = in.readObject();
-                if( msg instanceof UsersListMessage usersListMessage ) {
-                    connectionsManager.setList( usersListMessage.getConnectedUsers() );
+                if( msg instanceof UserConnectedMessage userConnectedMessage ) {
+                    Platform.runLater( () -> connectionsManager.setList( userConnectedMessage.getNewUsersList() ));
                 }
 
                 // Canvas initialization
@@ -73,8 +73,13 @@ public class Client {
 
                     } else if ( data instanceof UndoMessage undoMsg ) {
                         paintingZoneManager.undoLastAction( undoMsg.getNickname() );
-                    } else if ( data instanceof UsersListMessage connUsersListMess) {
-                        Platform.runLater( () -> connectionsManager.setList( connUsersListMess.getConnectedUsers() ));
+                    } else if ( data instanceof UserConnectedMessage userConnectedMessage) {
+                        // show toast message?
+                        Platform.runLater( () -> connectionsManager.setList( userConnectedMessage.getNewUsersList() ));
+                    } else if ( data instanceof UserDisconnectedMessage userDisconnectedMessage ) {
+                        // show toast message?
+                        Platform.runLater( () -> connectionsManager.setList( userDisconnectedMessage.getNewUsersList() ));
+
                     }
                 }
             } catch (Exception e) {
