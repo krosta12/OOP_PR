@@ -10,15 +10,17 @@ public class User implements Serializable {
     private LocalDateTime connectionTime;
 
     public enum Role {
-        ADMIN("Admin"),
-        VIEW_ONLY("View only"),
-        EDIT("Edit"),
-        CREATOR("Creator");
+        ADMIN("Admin", 1),
+        VIEW_ONLY("View only", 3),
+        EDIT("Edit", 2),
+        CREATOR("Creator", 0);
 
         private final String displayName;
+        private final int priority;
 
-        Role(String displayName) {
+        Role(String displayName, int rolePriority) {
             this.displayName = displayName;
+            this.priority = rolePriority;
         }
 
         @Override
@@ -39,6 +41,10 @@ public class User implements Serializable {
 
     public Role getRole() {
         return role;
+    }
+
+    public int getRolePriority() {
+        return role.priority;
     }
 
     public LocalDateTime getConnectionTime() {
