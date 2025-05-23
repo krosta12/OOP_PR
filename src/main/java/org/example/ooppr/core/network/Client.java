@@ -2,8 +2,10 @@ package org.example.ooppr.core.network;
 
 import javafx.application.Platform;
 import org.example.ooppr.Server.Data;
+import org.example.ooppr.core.ClientEventListener;
 import org.example.ooppr.core.drawing.DrawAction;
 import org.example.ooppr.core.network.protocol.*;
+import org.example.ooppr.core.users.PriorityException;
 import org.example.ooppr.core.users.User;
 import org.example.ooppr.ui.managers.ConnectionsManager;
 import org.example.ooppr.ui.managers.PaintingZoneManager;
@@ -23,6 +25,8 @@ public class Client {
 
     private final PaintingZoneManager paintingZoneManager;
     private final ConnectionsManager connectionsManager;
+
+    private ClientEventListener listener;
 
     public Client( PaintingZoneManager paintingZoneManager, ConnectionsManager connectionsManager ) {
         this.paintingZoneManager = paintingZoneManager;
@@ -60,7 +64,7 @@ public class Client {
 
                     // drawing all by history
                     for( DrawAction action : canvasMsg.getDrawActions() ) {
-                        paintingZoneManager.drawByDrawAction(action, "init");
+                        paintingZoneManager.drawByDrawAction(action, user);
                     }
                 }
 
@@ -71,7 +75,7 @@ public class Client {
 
                     if( data instanceof DrawActionMessage drawMsg ) {
                         DrawAction action = drawMsg.getDrawAction();
-                        paintingZoneManager.drawByDrawAction( action, drawMsg.getNickname() );
+                        paintingZoneManager.drawByDrawAction( action, drawMsg.getSender() );
 
                     } else if ( data instanceof UndoMessage undoMsg ) {
                         paintingZoneManager.undoLastAction( undoMsg.getNickname() );
@@ -82,7 +86,8 @@ public class Client {
                         // show toast message?
                         System.out.println( "[CLIENT] disconnected" );
                         Platform.runLater( () -> connectionsManager.setList( userDisconnectedMessage.getNewUsersList() ));
-
+                    } else if ( data instanceof KickUserMessage kickUserMessage ) {
+                        handleKickUserMessage( kickUserMessage );
                     }
                 }
             } catch (Exception e) {
@@ -93,10 +98,14 @@ public class Client {
         clientThread.start();
     }
 
+    private void handleKickUserMessage( KickUserMessage kickUserMessage ) {
+        listener.onKick();
+    }
+
     //WARN DOC
-    public void sendDrawAction(DrawAction action, String nickname) {
+    public void sendDrawAction(DrawAction action, User user) {
         try {
-            DrawActionMessage msg = new DrawActionMessage(action, nickname);
+            DrawActionMessage msg = new DrawActionMessage(action, user);
             out.writeObject(msg);
             out.flush();
         } catch (IOException e) { //WARN TRANSLATE
@@ -138,6 +147,49 @@ public class Client {
         if( clientThread != null && clientThread.isAlive() ) {
             clientThread.interrupt();
         }
+    }
+
+    /**
+     * Methods sends to server kick message. Also checks users priorities
+     * @param itemUser
+     * @param productUser
+     * @throws PriorityException
+     */
+    public void kickUser( User itemUser, User productUser ) throws PriorityException {
+
+        // checking priorities
+        int itemUserRolePriority = itemUser.getRolePriority();
+        int productUserRolePriority = productUser.getRolePriority();
+
+        if( productUserRolePriority > 1 )
+            throw new PriorityException("You can't kick " + itemUser.getNickname() + ". You don't have enough rights!");
+        if( itemUser.getNickname().equals( productUser.getNickname() ) )
+            throw new PriorityException( "You can't kick yourself!" );
+        if( itemUserRolePriority == productUserRolePriority )
+            throw new PriorityException( "You can't kick " + itemUser.getNickname() + ". You have the same priority level!" );
+
+        // sending kick request to server
+        sendKickMessage( itemUser, productUser );
+    }
+
+    /**
+     * Method sends kicking message to server
+     * @param kickee user who need to be kicked
+     * @param kicker user who kicks keckee
+     */
+    private void sendKickMessage( User kickee, User kicker ) {
+        try {
+            KickUserMessage kickUserMessage = new KickUserMessage( kickee, kicker );
+            out.writeObject( kickUserMessage );
+            out.flush();
+        } catch ( IOException e ) {
+            System.out.println( "[CLIENT] Error sending kick message: " + e.getMessage() );
+        }
+
+    }
+
+    public void setClientEventListener( ClientEventListener listener ) {
+        this.listener = listener;
     }
 
 }

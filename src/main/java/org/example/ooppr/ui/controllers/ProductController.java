@@ -1,13 +1,17 @@
 package org.example.ooppr.ui.controllers;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.example.ooppr.core.ClientEventListener;
 import org.example.ooppr.core.network.Client;
 import org.example.ooppr.core.network.Server;
 import org.example.ooppr.core.users.User;
@@ -18,6 +22,7 @@ import org.example.ooppr.ui.managers.ToolsManager;
 
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class ProductController implements Initializable {
@@ -115,7 +120,32 @@ public class ProductController implements Initializable {
         this.client = new Client( paintingZoneManager, connectionsManager );
         this.user = user;
         client.connect(ip, port, user);
-        paintingZoneManager.setClient( client, "abc" );
+        paintingZoneManager.setClient( client, user );
+        connectionsManager.setClient( client, user );
+        client.setClientEventListener(new ClientEventListener() {
+            @Override
+            public void onKick() {
+                Platform.runLater( () -> {
+                    Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/org/example/ooppr/sad-smile.jpg")));
+                    ImageView imageView = new ImageView(image);
+                    imageView.setFitWidth(100);
+                    imageView.setFitHeight(120);
+
+                    Alert alert = new Alert( Alert.AlertType.INFORMATION );
+                    alert.setTitle( "Kicked" );
+                    alert.setHeaderText( "You were kicked from server" );
+                    alert.setContentText( "The application will close now" );
+                    alert.getDialogPane().setGraphic(imageView);
+                    alert.showAndWait();
+                    closeProgram();
+                } );
+            }
+
+            @Override
+            public void onDisconnect() {
+
+            }
+        });
     }
 
     public void setStage(Stage stage) {
@@ -135,6 +165,7 @@ public class ProductController implements Initializable {
     private void closeProgram() {
         if( client != null )
             client.disconnect( user );
+        Platform.exit();
     }
 
     /**
@@ -150,4 +181,5 @@ public class ProductController implements Initializable {
 
         return result == ButtonType.OK;
     }
+
 }

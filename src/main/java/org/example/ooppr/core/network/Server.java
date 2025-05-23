@@ -3,6 +3,7 @@ package org.example.ooppr.core.network;
 import javafx.scene.paint.Color;
 import org.example.ooppr.core.drawing.DrawAction;
 import org.example.ooppr.core.network.protocol.*;
+import org.example.ooppr.core.users.PriorityException;
 import org.example.ooppr.core.users.User;
 
 import java.io.*;
@@ -85,15 +86,10 @@ public class Server {
                     handleDrawActionMessage( drawMsg );
                 } else if ( msg instanceof UndoMessage undoMsg ) {
                     handleUndoMessage( undoMsg );
-                } else if( msg instanceof DisconnectMessage disconnMsg ) {
-
-                    for( User u : users.keySet() ) { // checking disconnected user nickname and removing it from all users list
-                        if( u.getNickname().equals( disconnMsg.getUser().getNickname() ) ) {
-                            users.remove( u );
-                        }
-                    }
-                    // broadcast to other users
-                    broadcast( new UserDisconnectedMessage( users.keySet().stream().toList() ) );
+                } else if( msg instanceof DisconnectMessage disconnectMessage ) {
+                    handleDisconnectMessage( disconnectMessage );
+                } else if( msg instanceof KickUserMessage kickUserMessage ) {
+                    handleKickUserMessage( kickUserMessage );
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -101,16 +97,73 @@ public class Server {
         }
     }
 
+    // -- HANDLER METHODS --
+    // <editor-fold desc="Handler Methods">
+
     private void handleDrawActionMessage( DrawActionMessage drawMsg ) {
         DrawAction action = drawMsg.getDrawAction();
         history.add(action);
         broadcast( drawMsg );
     }
 
+    /**
+     * The method handles DisconnectMessage
+     * @param disconnectMessage
+     */
+    private void handleDisconnectMessage( DisconnectMessage disconnectMessage ) {
+        for( User u : users.keySet() ) { // checking disconnected user nickname and removing it from all users list
+            if( u.getNickname().equals( disconnectMessage.getUser().getNickname() ) ) {
+                users.remove( u );
+            }
+        }
+        // broadcast to other users
+        broadcast( new UserDisconnectedMessage( users.keySet().stream().toList() ) );
+    }
+
+    /**
+     * Double-checks users roles priorities and sends message to kickee
+     */
+    private void handleKickUserMessage( KickUserMessage kickUserMessage ) {
+        User kickee = kickUserMessage.gerKickee();
+        User kicker = kickUserMessage.getKicker();
+        if( canKick( kickee, kicker ) ) {
+            for( User u : users.keySet() ) { // watching all users
+                try {
+                    if( u.getNickname().equals( kickee.getNickname() ) ) { // find needed user by nickname
+                        users.get( u ).writeObject( kickUserMessage );
+                        users.get( u ).flush();
+                    }
+                } catch ( IOException e ) {
+                    System.out.println( "[SERVER] Can't send kick message to client: " + e.getMessage() );
+                }
+
+            }
+        }
+    }
+
     private void handleUndoMessage( UndoMessage undoMsg ) {
         //broadcast( undoMsg );
     }
 
+    // </editor-fold>
+
+
+    // -- OTHER VERY IMPORTANT METHODS --
+    // <editor-fold desc="Other very important methods">
+
+    /**
+     * The method checks does user kicker can kick user kickee
+     * @return boolean can kick or not
+     */
+    private boolean canKick( User kickee, User kicker ) {
+        if( kicker.getRolePriority() > 1 )
+            return false;
+        if( kickee.getNickname().equals( kicker.getNickname() ) )
+            return false;
+        if( kickee.getRolePriority() == kicker.getRolePriority() )
+            return false;
+        return true;
+    }
 
     /**
      * Broadcasting all data to all Clients (echo)
@@ -137,18 +190,10 @@ public class Server {
         }
     }
 
+    // </editor-fold>
 
-    //WARN DOC
-    //WARN REVIEW USAGE
-    public void connectToHost(String ip, int port) {
-        try {
-            Socket socket = new Socket(ip, port);//WARN TRANSLATE
-            System.out.println("Подключен к серверу: " + ip + ":" + port);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
+    // -- GETTERS AND SETTERS --
+    // <editor-fold desc="Getters and Setters">
 
     public String getIp() {
         return this.ip;
@@ -161,4 +206,5 @@ public class Server {
     public void setCreator(User creatorUser) {
         this.creator = creatorUser;
     }
+    // </editor-fold>
 }
