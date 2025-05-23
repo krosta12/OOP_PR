@@ -17,7 +17,7 @@ public class Server {
     private int port;
     private String ip;
     private boolean isStarted = false;
-    private final Map<User, ObjectOutputStream> users = new HashMap<>();
+    private final Map<User, ObjectOutputStream> users = new ConcurrentHashMap<>();
 
     private final List<DrawAction> history = new ArrayList<>();
 
