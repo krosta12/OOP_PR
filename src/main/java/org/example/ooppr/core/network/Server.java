@@ -62,11 +62,23 @@ public class Server {
             // Initializing user
             Object initUser = in.readObject();
             if( initUser instanceof InitUserMessage initUserMsg ){
-                User user = initUserMsg.getUser();
-                users.put( user, out );
+                User newUser = initUserMsg.getUser();
+
+                // Checking nickname uniqueness
+                for( User u : users.keySet() ) {
+                    if( u.getNickname().equals( newUser.getNickname() ) ) {
+                        NotUniqueNicknameException e = new NotUniqueNicknameException("");
+                        ExceptionMessage eMsg = new ExceptionMessage( e );
+                        out.writeObject( eMsg );
+                        out.flush();
+                        return;
+                    }
+                }
+
+                users.put( newUser, out );
                 System.out.println("[SERVER] Client connected: " +
                         socket.getRemoteSocketAddress().toString().substring(1) + " " +
-                        user.getNickname() );
+                        newUser.getNickname() );
             }
             // Send user list message
             UserConnectedMessage userConnectedMessage = new UserConnectedMessage( users.keySet().stream().toList() );

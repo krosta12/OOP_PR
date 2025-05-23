@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import org.example.ooppr.core.ClientEventListener;
 import org.example.ooppr.core.network.Client;
 import org.example.ooppr.core.network.Server;
+import org.example.ooppr.core.network.protocol.NotUniqueNicknameException;
 import org.example.ooppr.core.users.User;
 import org.example.ooppr.ui.managers.ColorPickerManager;
 import org.example.ooppr.ui.managers.ConnectionsManager;
@@ -119,6 +120,7 @@ public class ProductController implements Initializable {
         connectionsManager = new ConnectionsManager( connectionsWrapper );
         this.client = new Client( paintingZoneManager, connectionsManager );
         this.user = user;
+
         client.connect(ip, port, user);
         paintingZoneManager.setClient( client, user );
         connectionsManager.setClient( client, user );
@@ -126,19 +128,18 @@ public class ProductController implements Initializable {
             @Override
             public void onKick() {
                 Platform.runLater( () -> {
-                    Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/org/example/ooppr/sad-smile.jpg")));
-                    ImageView imageView = new ImageView(image);
-                    imageView.setFitWidth(100);
-                    imageView.setFitHeight(120);
-
-                    Alert alert = new Alert( Alert.AlertType.INFORMATION );
-                    alert.setTitle( "Kicked" );
-                    alert.setHeaderText( "You were kicked from server" );
-                    alert.setContentText( "The application will close now" );
-                    alert.getDialogPane().setGraphic(imageView);
-                    alert.showAndWait();
+                    showKickAlert();
                     closeProgram();
                 } );
+            }
+
+            @Override
+            public void onNicknameNotUnique() {
+                Platform.runLater( () -> {
+                    showNotUniqueNicknameAlert();
+                    closeProgram();
+                } );
+
             }
 
             @Override
@@ -147,6 +148,7 @@ public class ProductController implements Initializable {
             }
         });
     }
+
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -181,5 +183,40 @@ public class ProductController implements Initializable {
 
         return result == ButtonType.OK;
     }
+
+
+    /**
+     * Shows user notification that he was kicked (he-he-he)
+     */
+    private void showKickAlert() {
+        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/org/example/ooppr/sad-smile.jpg")));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(100);
+        imageView.setFitHeight(120);
+
+        Alert alert = new Alert( Alert.AlertType.INFORMATION );
+        alert.setTitle( "Kicked" );
+        alert.setHeaderText( "You were kicked from server" );
+        alert.setContentText( "The application will close now" );
+        alert.getDialogPane().setGraphic(imageView);
+        alert.showAndWait();
+    }
+
+    /**
+     * Shows user exception notification
+     */
+    private void showNotUniqueNicknameAlert() {
+        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/org/example/ooppr/shocked-smile.png")));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(100);
+        imageView.setFitHeight(120);
+
+        Alert alert = new Alert( Alert.AlertType.INFORMATION );
+        alert.setTitle( "Nickname exception" );
+        alert.setHeaderText( "This nickname is already taken!" );
+        alert.setContentText( "Please choose another one." );
+        alert.showAndWait();
+    }
+
 
 }

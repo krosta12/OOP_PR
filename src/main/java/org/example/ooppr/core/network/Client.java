@@ -46,10 +46,13 @@ public class Client {
                 out.writeObject( initUserMsg );
                 out.flush();
 
-                // Get connected users list
+                // Get connected users list or stop connection if name is not unique
                 Object msg = in.readObject();
                 if( msg instanceof UserConnectedMessage userConnectedMessage ) {
                     Platform.runLater( () -> connectionsManager.setList( userConnectedMessage.getNewUsersList() ));
+                } else if ( msg instanceof ExceptionMessage eMsg ) {
+                    listener.onNicknameNotUnique();
+                    return;
                 }
 
                 // Canvas initialization
