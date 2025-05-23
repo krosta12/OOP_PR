@@ -3,6 +3,7 @@ package org.example.ooppr.ui.managers;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
+import org.example.ooppr.core.network.Client;
 import org.example.ooppr.core.users.User;
 import org.example.ooppr.ui.controllers.UserItemController;
 
@@ -14,10 +15,14 @@ import java.util.stream.Collectors;
 public class ConnectionsManager {
 
     private final VBox userListVBox;
+    private Client client;
+    private User productUser;
+
     private final List<User> connectedUsers = new ArrayList<>();
 
     public ConnectionsManager(VBox userListVBox) {
         this.userListVBox = userListVBox;
+
     }
 
     /**
@@ -47,13 +52,13 @@ public class ConnectionsManager {
      */
     private void refreshList() {
         userListVBox.getChildren().clear();
-        for( User user : getSortedUsers() ) {
+        for( User itemUser : getSortedUsers() ) {
             try {
                 FXMLLoader loader = new FXMLLoader( getClass().getResource("/org/example/ooppr/UserItem.fxml") );
                 Node userNode = loader.load();
 
                 UserItemController controller = loader.getController();
-                controller.setUser( user );
+                controller.setUser( itemUser, productUser, client );
                 userListVBox.getChildren().add( userNode );
 
             } catch ( IOException e ) {
@@ -83,5 +88,10 @@ public class ConnectionsManager {
         clearList();
         connectedUsers.addAll(connectedUsersList);
         refreshList();
+    }
+
+    public void setClient(Client client, User productUser) {
+        this.client = client;
+        this.productUser = productUser;
     }
 }

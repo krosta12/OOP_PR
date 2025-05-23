@@ -12,6 +12,7 @@ import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.transform.Scale;
 import org.example.ooppr.core.drawing.DrawAction;
 import org.example.ooppr.core.network.Client;
+import org.example.ooppr.core.users.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,7 @@ public class PaintingZoneManager {
     private Color defaultBCColor;
     private Client client;
     private String nickname;
+    private User user;
 
 
     public void setCanvas(Canvas canvas) {
@@ -188,7 +190,7 @@ public class PaintingZoneManager {
         double dy = currentY - lastSentY;
 
         if (Math.hypot(dx, dy) >= sendThreshold) { // мат. вект. длинна сравниваем с шагом на каждом фрейме обновления позиции мышки
-            client.sendDrawAction(fragmentAction, nickname); // елсли изменения существенны
+            client.sendDrawAction(fragmentAction, user); // елсли изменения существенны
             fragmentAction = new DrawAction(selectedColor.toString(), brushSize, selectedTool);
             fragmentAction.addPoint(currentX, currentY);
             lastSentX = currentX; //обновляем позиции точки для нового построяния вектора
@@ -240,7 +242,7 @@ public class PaintingZoneManager {
         if( fullAction != null ) {
 
             if( client != null ) {
-                client.sendDrawAction(fragmentAction, nickname); //мы отправим кусок рисунка а не весь чтоб не накладывать их друг на друга
+                client.sendDrawAction(fragmentAction, user); //мы отправим кусок рисунка а не весь чтоб не накладывать их друг на друга
             }
 
             actionsHistory.add(fullAction); // добавим ЦЕЛУЮ фигуру чтоб откат был не по частям
@@ -300,9 +302,9 @@ public class PaintingZoneManager {
         this.defaultBCColor = color;
     }
 
-    public void drawByDrawAction(DrawAction action, String actionerNicknane) {
+    public void drawByDrawAction(DrawAction action, User sender) {
 
-        if(!Objects.equals(nickname, actionerNicknane)) {
+        if(!Objects.equals(user.getNickname(), sender.getNickname())) {
             actionsHistory.add( action );
         }
         Platform.runLater( () -> {
@@ -312,8 +314,8 @@ public class PaintingZoneManager {
         } );
     }
 
-    public void setClient( Client client, String nickname ) {
+    public void setClient( Client client, User user ) {
         this.client = client;
-        this.nickname = nickname;
+        this.user = user;
     }
 }

@@ -1,6 +1,7 @@
 package org.example.ooppr.core.network.protocol;
 
 import org.example.ooppr.core.drawing.DrawAction;
+import org.example.ooppr.core.users.User;
 
 import java.io.Serial;
 
@@ -10,19 +11,19 @@ public class DrawActionMessage extends Message {
     private static final long serialVersionUID = 1L;
 
     private final DrawAction action;
-    private final String nickname;
+    private final User sender;
 
-    public DrawActionMessage(DrawAction action, String senderNickname) {
+    public DrawActionMessage(DrawAction action, User sender) {
         super( MessageType.DRAW_ACTION );
         this.action = action;
-        this.nickname = senderNickname;
+        this.sender = sender;
     }
 
     public DrawAction getDrawAction() {
         return this.action;
     }
 
-    public String getNickname() {
-        return this.nickname;
+    public User getSender() {
+        return this.sender;
     }
 }

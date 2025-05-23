@@ -10,10 +10,10 @@ public abstract class Message implements Serializable {
         CANVAS_STATE,
         UNDO,
         INIT_USER,
-        USERS_LIST,
         USER_CONNECTED,
         USER_DISCONNECTED,
         USER_DISCONNECT,
+        KICK_USER,
         CHAT // TODO do we need it?
     }
 
