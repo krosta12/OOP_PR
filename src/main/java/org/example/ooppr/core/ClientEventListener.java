@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface ClientEventListener {
     void onKick();
+    void onBan();
     void onDisconnect();
     void onInitializeCanvas( int xRes, int yRes, String colorWeb, List<DrawAction> actions );
     void onDrawActionMessageReceived( DrawAction action, User sender );

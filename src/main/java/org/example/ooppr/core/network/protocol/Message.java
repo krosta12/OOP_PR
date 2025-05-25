@@ -14,7 +14,7 @@ public abstract class Message implements Serializable {
         USER_DISCONNECTED,
         USER_DISCONNECT,
         KICK_USER,
-        EXCEPTION, CHAT // TODO do we need it?
+        EXCEPTION, BAN_USER, CHAT // TODO do we need it?
     }
 
     private final MessageType type;

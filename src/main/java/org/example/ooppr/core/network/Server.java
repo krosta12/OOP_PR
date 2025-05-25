@@ -136,6 +136,8 @@ public class Server {
                     handleDisconnectMessage( disconnectMessage );
                 } else if( msg instanceof KickUserMessage kickUserMessage ) {
                     handleKickUserMessage( kickUserMessage );
+                }else if( msg instanceof BanUserMessage banUserMessage ) {
+                    handleBanUserMessage( banUserMessage );
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -172,7 +174,7 @@ public class Server {
     private void handleKickUserMessage( KickUserMessage kickUserMessage ) {
         User kickee = kickUserMessage.gerKickee();
         User kicker = kickUserMessage.getKicker();
-        if( canKick( kickee, kicker ) ) {
+        if( canKickOrBan( kickee, kicker ) ) {
             for( User u : users.keySet() ) { // watching all users
                 try {
                     if( u.getNickname().equals( kickee.getNickname() ) ) { // find needed user by nickname
@@ -180,9 +182,26 @@ public class Server {
                         users.get( u ).flush();
                     }
                 } catch ( IOException e ) {
-                    System.out.println( "[SERVER] Can't send kick message to client: " + e.getMessage() );
+                    System.out.println( "[SERVER] Error sending kick message to client: " + e.getMessage() );
                 }
 
+            }
+        }
+    }
+
+    private void handleBanUserMessage( BanUserMessage banUserMessage ) {
+        User banned = banUserMessage.gerBanned();
+        User banner = banUserMessage.getBanner();
+        if( canKickOrBan( banned, banner ) ) {
+            for( User u : users.keySet() ) {
+                try {
+                    if( u.getNickname().equals( banned.getNickname() ) ) {
+                        users.get( u ).writeObject( banUserMessage );
+                        users.get( u ).flush();
+                    }
+                } catch ( IOException e ) {
+                    System.out.println( "[SERVER] Error sending ban message to client: " + e.getMessage() );
+                }
             }
         }
     }
@@ -201,12 +220,12 @@ public class Server {
      * The method checks does user kicker can kick user kickee
      * @return boolean can kick or not
      */
-    private boolean canKick( User kickee, User kicker ) {
-        if( kicker.getRolePriority() > 1 )
+    private boolean canKickOrBan( User u1, User u2 ) {
+        if( u2.getRolePriority() > 1 )
             return false;
-        if( kickee.getNickname().equals( kicker.getNickname() ) )
+        if( u1.getNickname().equals( u1.getNickname() ) )
             return false;
-        if( kickee.getRolePriority() == kicker.getRolePriority() )
+        if( u1.getRolePriority() == u2.getRolePriority() )
             return false;
         return true;
     }
