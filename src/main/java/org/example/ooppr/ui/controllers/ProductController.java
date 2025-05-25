@@ -279,6 +279,16 @@ public class ProductController implements Initializable, ClientEventListener, Dr
     }
 
     @Override
+    public void onUserRoleChanged(List<User> newUsersList) {
+        for( User u : newUsersList ) {
+            if( u.getNickname().equals( user.getNickname() ) )
+                user.setRole( u.getRole() );
+        }
+        Platform.runLater( () -> connectionsManager.setList( newUsersList ));
+
+    }
+
+    @Override
     public void onDisconnect() {
 
     }
