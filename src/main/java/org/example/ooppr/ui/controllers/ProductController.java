@@ -194,6 +194,23 @@ public class ProductController implements Initializable, ClientEventListener, Dr
     }
 
     /**
+     * Shows user notification that he was banned (he-he-he)
+     */
+    private void showBanAlert() {
+        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/org/example/ooppr/angry-smile.jpg")));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(100);
+        imageView.setFitHeight(120);
+
+        Alert alert = new Alert( Alert.AlertType.INFORMATION );
+        alert.setTitle( "Banned" );
+        alert.setHeaderText( "You were banned!" );
+        alert.setContentText( "The application will close now" );
+        alert.getDialogPane().setGraphic(imageView);
+        alert.showAndWait();
+    }
+
+    /**
      * Shows user exception notification
      */
     private void showExceptionMessage( Exception e ) {
@@ -217,6 +234,14 @@ public class ProductController implements Initializable, ClientEventListener, Dr
     public void onKick() {
         Platform.runLater( () -> {
             showKickAlert();
+            closeProgram();
+        } );
+    }
+
+    @Override
+    public void onBan() {
+        Platform.runLater( () -> {
+            showBanAlert();
             closeProgram();
         } );
     }

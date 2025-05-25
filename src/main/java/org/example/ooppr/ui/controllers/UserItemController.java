@@ -41,16 +41,19 @@ public class UserItemController {
 
         try{
             client.kickUser( itemUser, productUser );
+            System.out.println( productUser.getNickname() + " kicked user " + itemUser.getNickname() );
         } catch (PriorityException e) {
             kickDeniedAlert( e.getMessage() );
         }
-
-        System.out.println( productUser.getNickname() + " kicked user " + itemUser.getNickname() );
     }
 
     private void banUser() {
-        // TODO ban
-        System.out.println( "Ban user: " + itemUser.getNickname() );
+        try{
+            client.banUser( itemUser, productUser );
+            System.out.println( productUser.getNickname() + " kicked user " + itemUser.getNickname() );
+        } catch (PriorityException e) {
+            kickDeniedAlert( e.getMessage() );
+        }
     }
 
     private void changeUserRole() {

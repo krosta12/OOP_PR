@@ -55,28 +55,25 @@ public class Client {
                 }
 
                 while (true) { // getting all new messages
-                    System.out.print( "[CLIENT] Received new message: " );
+                    System.out.print( "[CLIENT] Received new message" );
 
                     Object data = in.readObject();
 
                     if( data instanceof DrawActionMessage drawMsg ) {
-                        System.out.println( "DrawActionMessage" );
                         handleDrawActionMessage( drawMsg );
 
                     } else if ( data instanceof UndoMessage undoMsg ) {
-                        System.out.println( "UndoMessage" );
                         handleUndoMessage( undoMsg );
                     } else if ( data instanceof UserConnectedMessage userConnectedMessage) {
                         // show toast message?
-                        System.out.println( "UserConnectedMessage" );
                         handleUserConnectedMessage( userConnectedMessage );
                     } else if ( data instanceof UserDisconnectedMessage userDisconnectedMessage ) {
                         // show toast message?
-                        System.out.println( "UserDisconnectedMessage" );
                         handleUserDisconnectedMessage( userDisconnectedMessage );
                     } else if ( data instanceof KickUserMessage kickUserMessage ) {
-                        System.out.println( "KickUserMessage" );
                         handleKickUserMessage( kickUserMessage );
+                    } else if ( data instanceof BanUserMessage banUserMessage ) {
+                        handleBanUserMessage( banUserMessage );
                     }
                 }
             } catch (Exception e) {
@@ -121,6 +118,12 @@ public class Client {
     private void handleKickUserMessage( KickUserMessage kickUserMessage ) {
         listener.onKick();
     }
+
+    private void handleBanUserMessage( BanUserMessage banUserMessage ) {
+        listener.onBan():
+    }
+
+
 
     //WARN DOC
     public void sendDrawAction(DrawAction action, User user) {
@@ -177,19 +180,32 @@ public class Client {
      */
     public void kickUser( User itemUser, User productUser ) throws PriorityException {
 
+        checkPriorities( itemUser, productUser, "kick" );
+        // sending kick request to server
+        sendKickMessage( itemUser, productUser );
+    }
+
+    /**
+     * Nethods sends to server kick message. Also checks users priorities
+     * @param itemUser
+     * @param productUser
+     */
+    public void banUser(User itemUser, User productUser) throws PriorityException {
+        checkPriorities( itemUser, productUser, "ban" );
+        sendBanMessage( itemUser, productUser );
+    }
+
+    private void checkPriorities( User itemUser, User productUser, String actionType ) throws PriorityException {
         // checking priorities
         int itemUserRolePriority = itemUser.getRolePriority();
         int productUserRolePriority = productUser.getRolePriority();
 
         if( productUserRolePriority > 1 )
-            throw new PriorityException("You can't kick " + itemUser.getNickname() + ". You don't have enough rights!");
+            throw new PriorityException("You can't + " + actionType + " " + itemUser.getNickname() + ". You don't have enough rights!");
         if( itemUser.getNickname().equals( productUser.getNickname() ) )
-            throw new PriorityException( "You can't kick yourself!" );
+            throw new PriorityException( "You can't " + actionType + " yourself!" );
         if( itemUserRolePriority == productUserRolePriority )
-            throw new PriorityException( "You can't kick " + itemUser.getNickname() + ". You have the same priority level!" );
-
-        // sending kick request to server
-        sendKickMessage( itemUser, productUser );
+            throw new PriorityException( "You can't "+ actionType +" " + itemUser.getNickname() + ". You have the same priority level!" );
     }
 
     /**
@@ -208,8 +224,17 @@ public class Client {
 
     }
 
+    private void sendBanMessage( User banned, User banner ) {
+        try {
+            BanUserMessage banUserMessage= new BanUserMessage( banned, banner );
+            out.writeObject( banUserMessage );
+            out.flush();
+        } catch ( IOException e ) {
+            System.out.println( "[CLIENT] Error sending ban message: " + e.getMessage() );
+        }
+    }
+
     public void setClientEventListener( ClientEventListener listener ) {
         this.listener = listener;
     }
-
 }
