@@ -19,6 +19,7 @@ public class Server {
     private String ip;
     private boolean isStarted = false;
     private final Map<User, ObjectOutputStream> users = new ConcurrentHashMap<>();
+    private ServerSocket serverSocket;
 
     private final List<DrawAction> history = new ArrayList<>();
 
@@ -40,7 +41,8 @@ public class Server {
     }
     //WARN WRITE A DOC
     public void startHost() {
-        try (ServerSocket serverSocket = new ServerSocket(this.port)) {
+        try {
+            serverSocket = new ServerSocket(this.port);
             isStarted = true;
             ip = InetAddress.getLocalHost().getHostAddress();
             System.out.println("* Server started at " + ip + ":" + port + " *");
@@ -51,6 +53,27 @@ public class Server {
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void stop() {
+        try {
+            isStarted = false;
+
+            for ( User u : users.keySet() ) {
+                KickUserMessage kickUserMessage = new KickUserMessage( u, creator );
+                ObjectOutputStream out = users.get( u );
+                out.writeObject( kickUserMessage );
+                out.flush();
+            }
+
+            if( serverSocket != null && !serverSocket.isClosed() )
+                serverSocket.close();
+            System.out.println( "[SERVER] stopped" );
+
+
+        } catch ( IOException e ) {
+            System.out.println( "[SERVER] Error closing socket: " + e.getMessage() );
         }
     }
 

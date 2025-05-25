@@ -67,9 +67,10 @@ public class CreationInterfaceHostController {
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
             ProductController productController = loader.getController();
+            productController.setStage( stage );
             productController.initializeCanvas(XResolution, YResolution, defaultColor);
             productController.setIpPort( server.getIp(), server.getPort() );
-            productController.connectToHost( server.getIp(), server.getPort(), creatorUser );
+            productController.startAsServer( server.getIp(), server.getPort(), creatorUser, server );
 
             scene = new Scene(root);
             stage.setScene(scene);

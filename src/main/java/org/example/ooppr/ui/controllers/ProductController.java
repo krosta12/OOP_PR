@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 import org.example.ooppr.core.ClientEventListener;
 import org.example.ooppr.core.network.Client;
 import org.example.ooppr.core.network.Server;
-import org.example.ooppr.core.network.protocol.NotUniqueNicknameException;
 import org.example.ooppr.core.users.User;
 import org.example.ooppr.ui.managers.ColorPickerManager;
 import org.example.ooppr.ui.managers.ConnectionsManager;
@@ -22,11 +21,10 @@ import org.example.ooppr.ui.managers.PaintingZoneManager;
 import org.example.ooppr.ui.managers.ToolsManager;
 
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class ProductController implements Initializable {
+public class ProductController implements Initializable, ClientEventListener {
     /**
      * Get all var-s from XML
      */
@@ -68,6 +66,7 @@ public class ProductController implements Initializable {
 
     private Stage stage;
     private Client client;
+    private Server server;
     private User user;
 
 
@@ -116,6 +115,11 @@ public class ProductController implements Initializable {
         ipPortLabel.setText( ip + ":" + port );
     }
 
+    public void startAsServer(String ip, int port, User creatorUser, Server server) {
+        connectToHost( ip, port, creatorUser );
+        this.server = server;
+    }
+
     public void connectToHost(String ip, int port, User user ) {
         connectionsManager = new ConnectionsManager( connectionsWrapper );
         this.client = new Client( paintingZoneManager, connectionsManager );
@@ -124,29 +128,7 @@ public class ProductController implements Initializable {
         client.connect(ip, port, user);
         paintingZoneManager.setClient( client, user );
         connectionsManager.setClient( client, user );
-        client.setClientEventListener(new ClientEventListener() {
-            @Override
-            public void onKick() {
-                Platform.runLater( () -> {
-                    showKickAlert();
-                    closeProgram();
-                } );
-            }
-
-            @Override
-            public void onNicknameNotUnique() {
-                Platform.runLater( () -> {
-                    showNotUniqueNicknameAlert();
-                    closeProgram();
-                } );
-
-            }
-
-            @Override
-            public void onDisconnect() {
-
-            }
-        });
+        client.setClientEventListener( this );
     }
 
 
@@ -165,8 +147,13 @@ public class ProductController implements Initializable {
      * Closing socket and exiting program
      */
     private void closeProgram() {
+
         if( client != null )
             client.disconnect( user );
+
+        if ( server != null )
+            server.stop();
+
         Platform.exit();
     }
 
@@ -218,5 +205,26 @@ public class ProductController implements Initializable {
         alert.showAndWait();
     }
 
+    @Override
+    public void onKick() {
+        Platform.runLater( () -> {
+            showKickAlert();
+            closeProgram();
+        } );
+    }
+
+    @Override
+    public void onNicknameNotUnique() {
+        Platform.runLater( () -> {
+            showNotUniqueNicknameAlert();
+            closeProgram();
+        } );
+
+    }
+
+    @Override
+    public void onDisconnect() {
+
+    }
 
 }
