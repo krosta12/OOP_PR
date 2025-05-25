@@ -49,7 +49,7 @@ public class Client {
                 // Get connected users list or stop connection if name is not unique
                 Object msg = in.readObject();
                 if( msg instanceof UserConnectedMessage userConnectedMessage ) {
-                    Platform.runLater( () -> connectionsManager.setList( userConnectedMessage.getNewUsersList() ));
+                    listener.onNewUsersList( userConnectedMessage.getNewUsersList() );
                 } else if ( msg instanceof ExceptionMessage eMsg ) {
                     listener.onNicknameNotUnique();
                     return;
@@ -58,38 +58,33 @@ public class Client {
                 // Canvas initialization
                 msg = in.readObject();
 
+                // Init canvas
                 if( msg instanceof CanvasStateMessage canvasMsg) {
-                    paintingZoneManager.initializeCanvas(
-                            canvasMsg.getxResolution(),
-                            canvasMsg.getyResolution(),
-                            canvasMsg.getColorWeb()
-                    );
-
-                    // drawing all by history
-                    for( DrawAction action : canvasMsg.getDrawActions() ) {
-                        paintingZoneManager.drawByDrawAction(action, user);
-                    }
+                    handleCanvasStateMessage( canvasMsg );
                 }
 
                 while (true) { // getting all new messages
-                    System.out.println( "[CLIENT] received new drawing message" );
+                    System.out.print( "[CLIENT] Received new message: " );
 
                     Object data = in.readObject();
 
                     if( data instanceof DrawActionMessage drawMsg ) {
-                        DrawAction action = drawMsg.getDrawAction();
-                        paintingZoneManager.drawByDrawAction( action, drawMsg.getSender() );
+                        System.out.println( "DrawActionMessage" );
+                        handleDrawActionMessage( drawMsg );
 
                     } else if ( data instanceof UndoMessage undoMsg ) {
-                        paintingZoneManager.undoLastAction( undoMsg.getNickname() );
+                        System.out.println( "UndoMessage" );
+                        handleUndoMessage( undoMsg );
                     } else if ( data instanceof UserConnectedMessage userConnectedMessage) {
                         // show toast message?
-                        Platform.runLater( () -> connectionsManager.setList( userConnectedMessage.getNewUsersList() ));
+                        System.out.println( "UserConnectedMessage" );
+                        handleUserConnectedMessage( userConnectedMessage );
                     } else if ( data instanceof UserDisconnectedMessage userDisconnectedMessage ) {
                         // show toast message?
-                        System.out.println( "[CLIENT] disconnected" );
-                        Platform.runLater( () -> connectionsManager.setList( userDisconnectedMessage.getNewUsersList() ));
+                        System.out.println( "UserDisconnectedMessage" );
+                        handleUserDisconnectedMessage( userDisconnectedMessage );
                     } else if ( data instanceof KickUserMessage kickUserMessage ) {
+                        System.out.println( "KickUserMessage" );
                         handleKickUserMessage( kickUserMessage );
                     }
                 }
@@ -99,6 +94,38 @@ public class Client {
         });
         clientThread.setDaemon(true);
         clientThread.start();
+    }
+
+    // -- MESSAGE HANDLERS --
+    private void handleCanvasStateMessage( CanvasStateMessage canvasStateMessage ) {
+        int xRes = canvasStateMessage.getxResolution();
+        int yRes = canvasStateMessage.getyResolution();
+        String colorWeb = canvasStateMessage.getColorWeb();
+        List<DrawAction> actions = canvasStateMessage.getDrawActions();
+        listener.onInitializeCanvas( xRes, yRes, colorWeb, actions );
+
+    }
+
+    private void handleDrawActionMessage( DrawActionMessage drawActionMessage ) {
+        DrawAction action = drawActionMessage.getDrawAction();
+        User sender = drawActionMessage.getSender();
+        listener.onDrawActionMessageReceived( action, sender );
+    }
+
+    private void handleUndoMessage( UndoMessage undoMessage ) {
+        listener.onUndo();
+//        paintingZoneManager.undoLastAction( undoMsg.getNickname() );
+    }
+
+    private void handleUserConnectedMessage( UserConnectedMessage userConnectedMessage ) {
+        List<User> newUsersList = userConnectedMessage.getNewUsersList();
+        listener.onNewUsersList( newUsersList );
+    }
+
+    private void handleUserDisconnectedMessage( UserDisconnectedMessage userDisconnectedMessage ) {
+        List<User> newUsersList = userDisconnectedMessage.getNewUsersList();
+        listener.onNewUsersList( newUsersList );
+
     }
 
     private void handleKickUserMessage( KickUserMessage kickUserMessage ) {
