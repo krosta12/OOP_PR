@@ -1,14 +1,10 @@
 package org.example.ooppr.core.network;
 
-import javafx.application.Platform;
-import org.example.ooppr.Server.Data;
 import org.example.ooppr.core.ClientEventListener;
 import org.example.ooppr.core.drawing.DrawAction;
 import org.example.ooppr.core.network.protocol.*;
 import org.example.ooppr.core.users.PriorityException;
 import org.example.ooppr.core.users.User;
-import org.example.ooppr.ui.managers.ConnectionsManager;
-import org.example.ooppr.ui.managers.PaintingZoneManager;
 
 import java.io.*;
 import java.net.*;
@@ -23,14 +19,9 @@ public class Client {
 
     private Thread clientThread;
 
-    private final PaintingZoneManager paintingZoneManager;
-    private final ConnectionsManager connectionsManager;
-
     private ClientEventListener listener;
 
-    public Client( PaintingZoneManager paintingZoneManager, ConnectionsManager connectionsManager ) {
-        this.paintingZoneManager = paintingZoneManager;
-        this.connectionsManager = connectionsManager;
+    public Client() {
     }
 
     //WARN DOC
@@ -103,7 +94,6 @@ public class Client {
         String colorWeb = canvasStateMessage.getColorWeb();
         List<DrawAction> actions = canvasStateMessage.getDrawActions();
         listener.onInitializeCanvas( xRes, yRes, colorWeb, actions );
-
     }
 
     private void handleDrawActionMessage( DrawActionMessage drawActionMessage ) {

@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.example.ooppr.core.ClientEventListener;
+import org.example.ooppr.core.DrawingEventListener;
 import org.example.ooppr.core.drawing.DrawAction;
 import org.example.ooppr.core.network.Client;
 import org.example.ooppr.core.network.Server;
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class ProductController implements Initializable, ClientEventListener {
+public class ProductController implements Initializable, ClientEventListener, DrawingEventListener {
     /**
      * Get all var-s from XML
      */
@@ -124,7 +125,7 @@ public class ProductController implements Initializable, ClientEventListener {
 
     public void connectToHost(String ip, int port, User user ) {
         connectionsManager = new ConnectionsManager( connectionsWrapper );
-        this.client = new Client( paintingZoneManager, connectionsManager );
+        this.client = new Client();
         this.user = user;
 
         client.connect(ip, port, user);
@@ -256,6 +257,13 @@ public class ProductController implements Initializable, ClientEventListener {
     public void onDisconnect() {
 
     }
+
+    // </editor-fold>
+
+    // -- DRAWING EVENT LISTENER --
+    // <editor-fold desc="Drawing events listener">
+
+
 
     // </editor-fold>
 
