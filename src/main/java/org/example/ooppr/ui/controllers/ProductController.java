@@ -100,6 +100,7 @@ public class ProductController implements Initializable, ClientEventListener, Dr
         toolsManager.attachSlider( brushSizeSlider, NPixelsText );
 
         menuBarManager = new MenuBarManager( menuBar, MenuItemSaveAs, MenuItemExit );
+        menuBarManager.setCanvas( paintingZone );
     }
 
 
