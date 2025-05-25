@@ -42,7 +42,7 @@ public class Client {
                 if( msg instanceof UserConnectedMessage userConnectedMessage ) {
                     listener.onNewUsersList( userConnectedMessage.getNewUsersList() );
                 } else if ( msg instanceof ExceptionMessage eMsg ) {
-                    listener.onNicknameNotUnique();
+                    listener.onException( eMsg.getException() );
                     return;
                 }
 

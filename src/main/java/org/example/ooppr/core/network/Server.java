@@ -20,6 +20,7 @@ public class Server {
     private boolean isStarted = false;
     private final Map<User, ObjectOutputStream> users = new ConcurrentHashMap<>();
     private ServerSocket serverSocket;
+    private Set<String> bannedIps = new HashSet<>();
 
     private final List<DrawAction> history = new ArrayList<>();
 
@@ -81,16 +82,26 @@ public class Server {
         try {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            String clientIp = socket.getInetAddress().getHostAddress();
 
             // Initializing user
             Object initUser = in.readObject();
             if( initUser instanceof InitUserMessage initUserMsg ){
                 User newUser = initUserMsg.getUser();
 
+                // Checking ban
+                if( bannedIps.contains( clientIp ) ) {
+                    UserBannedException e = new UserBannedException( "User is banned!" );
+                    ExceptionMessage eMsg = new ExceptionMessage( e );
+                    out.writeObject( eMsg );
+                    out.flush();
+                    return;
+                }
+
                 // Checking nickname uniqueness
                 for( User u : users.keySet() ) {
                     if( u.getNickname().equals( newUser.getNickname() ) ) {
-                        NotUniqueNicknameException e = new NotUniqueNicknameException("");
+                        NotUniqueNicknameException e = new NotUniqueNicknameException("User nickname is not unique!");
                         ExceptionMessage eMsg = new ExceptionMessage( e );
                         out.writeObject( eMsg );
                         out.flush();
