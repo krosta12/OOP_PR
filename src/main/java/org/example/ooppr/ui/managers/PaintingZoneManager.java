@@ -51,7 +51,6 @@ public class PaintingZoneManager {
 
     private Color defaultBCColor;
     private Client client;
-    private String nickname;
     private User user;
 
 
@@ -285,8 +284,8 @@ public class PaintingZoneManager {
             if (newScene != null) {
                 newScene.setOnKeyPressed(event -> {
                     if (event.isControlDown() && event.getCode().toString().equals("Z")) {
-                        undoLastAction( nickname );
-                        client.undo( nickname );
+                        undoLastAction( user.getNickname() );
+                        client.undo( user.getNickname() );
                         System.out.println( "CTRL+Z" );
                     }
                 });
