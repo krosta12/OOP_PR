@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.example.ooppr.core.ClientEventListener;
+import org.example.ooppr.core.drawing.DrawAction;
 import org.example.ooppr.core.network.Client;
 import org.example.ooppr.core.network.Server;
 import org.example.ooppr.core.users.User;
@@ -21,6 +22,7 @@ import org.example.ooppr.ui.managers.PaintingZoneManager;
 import org.example.ooppr.ui.managers.ToolsManager;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -205,6 +207,10 @@ public class ProductController implements Initializable, ClientEventListener {
         alert.showAndWait();
     }
 
+    // -- CLIENT EVENT LISTENER --
+    // <editor-fold desc="Client events listener">
+
+
     @Override
     public void onKick() {
         Platform.runLater( () -> {
@@ -223,8 +229,34 @@ public class ProductController implements Initializable, ClientEventListener {
     }
 
     @Override
+    public void onInitializeCanvas( int xResolution, int yResolution, String colorWeb, List<DrawAction> actions ) {
+        initializeCanvas( xResolution, yResolution, Color.valueOf( colorWeb ) );
+        // drawing all by history
+        for( DrawAction action : actions ) {
+            paintingZoneManager.drawByDrawAction(action, user);
+        }
+    }
+
+    @Override
+    public void onDrawActionMessageReceived(DrawAction action, User sender) {
+        paintingZoneManager.drawByDrawAction( action, sender );
+    }
+
+    @Override
+    public void onUndo() {
+        System.out.println( "[CLIENT] UNDO REQUIRED" );
+    }
+
+    @Override
+    public void onNewUsersList(List<User> usersList) {
+        Platform.runLater( () -> connectionsManager.setList( usersList ));
+    }
+
+    @Override
     public void onDisconnect() {
 
     }
+
+    // </editor-fold>
 
 }
