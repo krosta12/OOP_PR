@@ -17,10 +17,7 @@ import org.example.ooppr.core.drawing.DrawAction;
 import org.example.ooppr.core.network.Client;
 import org.example.ooppr.core.network.Server;
 import org.example.ooppr.core.users.User;
-import org.example.ooppr.ui.managers.ColorPickerManager;
-import org.example.ooppr.ui.managers.ConnectionsManager;
-import org.example.ooppr.ui.managers.PaintingZoneManager;
-import org.example.ooppr.ui.managers.ToolsManager;
+import org.example.ooppr.ui.managers.*;
 
 import java.net.URL;
 import java.util.List;
@@ -35,6 +32,9 @@ public class ProductController implements Initializable, ClientEventListener, Dr
     @FXML
     public Canvas paintingZone;
     public VBox connectionsWrapper;
+    public MenuItem MenuItemSaveAs;
+    public MenuItem MenuItemExit;
+    public MenuBar menuBar;
 
     //get color system buttons
     @FXML
@@ -66,6 +66,7 @@ public class ProductController implements Initializable, ClientEventListener, Dr
 
     private final PaintingZoneManager paintingZoneManager = new PaintingZoneManager();
     private ConnectionsManager connectionsManager;
+    private MenuBarManager menuBarManager;
 
     private Stage stage;
     private Client client;
@@ -98,8 +99,7 @@ public class ProductController implements Initializable, ClientEventListener, Dr
         toolsManager.attachButton( TakeLastikButton, 'l' );
         toolsManager.attachSlider( brushSizeSlider, NPixelsText );
 
-        // Connections info
-
+        menuBarManager = new MenuBarManager( menuBar, MenuItemSaveAs, MenuItemExit );
     }
 
 

@@ -54,11 +54,12 @@
 
 <BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400" minWidth="500" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ooppr.ui.controllers.ProductController">
    <top>
-      <MenuBar style="-fx-background-color: #242424;" stylesheets="@productInterface.css" BorderPane.alignment="CENTER">
+      <MenuBar style="-fx-background-color: #242424;" fx:id="menuBar" stylesheets="@productInterface.css" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem fx:id="MenuItemSaveAs" mnemonicParsing="false" text="Save as..." />
+                  <MenuItem fx:id="MenuItemExit" mnemonicParsing="false" text="Exit" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
@@ -89,7 +90,7 @@
                   </HBox>
                   <VBox id="LayersContainer" maxWidth="1.7976931348623157E308" prefHeight="10804.0" style="-fx-background-color: #242424;" VBox.vgrow="ALWAYS">
                      <children>
-                        <ScrollPane style="-fx-background-color: #242424;" VBox.vgrow="ALWAYS" fitToHeight="true" fitToWidth="true">
+                        <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: #242424;" VBox.vgrow="ALWAYS">
                            <content>
                               <VBox prefHeight="121.0" prefWidth="266.0" style="-fx-background-color: #242424;">
                                  <children>
