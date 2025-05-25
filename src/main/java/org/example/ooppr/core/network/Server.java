@@ -3,7 +3,6 @@ package org.example.ooppr.core.network;
 import javafx.scene.paint.Color;
 import org.example.ooppr.core.drawing.DrawAction;
 import org.example.ooppr.core.network.protocol.*;
-import org.example.ooppr.core.users.PriorityException;
 import org.example.ooppr.core.users.User;
 
 import java.io.*;
@@ -136,8 +135,10 @@ public class Server {
                     handleDisconnectMessage( disconnectMessage );
                 } else if( msg instanceof KickUserMessage kickUserMessage ) {
                     handleKickUserMessage( kickUserMessage );
-                }else if( msg instanceof BanUserMessage banUserMessage ) {
+                } else if( msg instanceof BanUserMessage banUserMessage ) {
                     handleBanUserMessage( banUserMessage );
+                } else if( msg instanceof ChangeUserRoleMessage changeUserRoleMessage ) {
+                    handleChangeUserRoleMessage( changeUserRoleMessage );
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -172,7 +173,7 @@ public class Server {
      * Double-checks users roles priorities and sends message to kickee
      */
     private void handleKickUserMessage( KickUserMessage kickUserMessage ) {
-        User kickee = kickUserMessage.gerKickee();
+        User kickee = kickUserMessage.getKickee();
         User kicker = kickUserMessage.getKicker();
         if( canKickOrBan( kickee, kicker ) ) {
             for( User u : users.keySet() ) { // watching all users
@@ -190,7 +191,7 @@ public class Server {
     }
 
     private void handleBanUserMessage( BanUserMessage banUserMessage ) {
-        User banned = banUserMessage.gerBanned();
+        User banned = banUserMessage.getBanned();
         User banner = banUserMessage.getBanner();
         if( canKickOrBan( banned, banner ) ) {
             for( User u : users.keySet() ) {
@@ -204,6 +205,24 @@ public class Server {
                 }
             }
         }
+    }
+
+    private void handleChangeUserRoleMessage( ChangeUserRoleMessage changeUserRoleMessage ) {
+        System.out.println( "[SERVER] change role message received" );
+        User user = changeUserRoleMessage.getUser();
+        User.Role newRole = changeUserRoleMessage.getNewRole();
+
+        List<User> newList = new ArrayList<>();
+
+        for( User u : users.keySet() ) {
+            if( u.getNickname().equals( user.getNickname() ) ) {
+                u.setRole( newRole );
+            }
+            newList.add( new User( u.getNickname(), u.getRole(), u.getConnectionTime() ) );
+        }
+
+        UserChangedRoleMessage userChangedRoleMessage = new UserChangedRoleMessage( newList );
+        broadcast( userChangedRoleMessage );
     }
 
     private void handleUndoMessage( UndoMessage undoMsg ) {

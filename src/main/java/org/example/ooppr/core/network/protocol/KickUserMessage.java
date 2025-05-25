@@ -13,7 +13,7 @@ public class KickUserMessage extends Message{
         this.kicker = kicker;
     }
 
-    public User gerKickee() {
+    public User getKickee() {
         return this.kickee;
     }
 
