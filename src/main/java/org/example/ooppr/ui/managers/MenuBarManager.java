@@ -83,7 +83,7 @@ public class MenuBarManager {
     }
 
     private void saveImageToFile(WritableImage image, String path) {
-        System.out.println( "Photo saved to " + path + " (no)" );
+        System.out.println( "Photo saved to " + path );
     }
 
 

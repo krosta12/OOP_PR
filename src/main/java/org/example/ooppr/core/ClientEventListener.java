@@ -8,11 +8,10 @@ import java.util.List;
 
 public interface ClientEventListener {
     void onKick();
-    void onNicknameNotUnique();
     void onDisconnect();
-
     void onInitializeCanvas( int xRes, int yRes, String colorWeb, List<DrawAction> actions );
     void onDrawActionMessageReceived( DrawAction action, User sender );
     void onUndo();
     void onNewUsersList( List<User> usersList );
+    void onException( Exception e );
 }

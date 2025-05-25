@@ -196,16 +196,16 @@ public class ProductController implements Initializable, ClientEventListener, Dr
     /**
      * Shows user exception notification
      */
-    private void showNotUniqueNicknameAlert() {
+    private void showExceptionMessage( Exception e ) {
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/org/example/ooppr/shocked-smile.png")));
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(100);
         imageView.setFitHeight(120);
 
         Alert alert = new Alert( Alert.AlertType.INFORMATION );
-        alert.setTitle( "Nickname exception" );
-        alert.setHeaderText( "This nickname is already taken!" );
-        alert.setContentText( "Please choose another one." );
+        alert.setTitle( "User exception" );
+        alert.setHeaderText( null );
+        alert.setContentText( e.getMessage() );
         alert.showAndWait();
     }
 
@@ -219,15 +219,6 @@ public class ProductController implements Initializable, ClientEventListener, Dr
             showKickAlert();
             closeProgram();
         } );
-    }
-
-    @Override
-    public void onNicknameNotUnique() {
-        Platform.runLater( () -> {
-            showNotUniqueNicknameAlert();
-            closeProgram();
-        } );
-
     }
 
     @Override
@@ -252,6 +243,14 @@ public class ProductController implements Initializable, ClientEventListener, Dr
     @Override
     public void onNewUsersList(List<User> usersList) {
         Platform.runLater( () -> connectionsManager.setList( usersList ));
+    }
+
+    @Override
+    public void onException( Exception e ) {
+        Platform.runLater( () -> {
+            showExceptionMessage( e );
+            closeProgram();
+        } );
     }
 
     @Override
