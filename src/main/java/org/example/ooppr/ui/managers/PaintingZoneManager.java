@@ -21,7 +21,7 @@ import java.util.Objects;
 public class PaintingZoneManager {
 
     //sendThreshold модет просадить сервер пожтому нужно найти оптимальное значени или изменять его поп мере прибавления кливентов по формуле квадратов чтоб не повесить сервер
-    private final double sendThreshold = 20;      // Переменная мат. шага по длинне вектора относительно начальной точки - меньше значнеие - большая плотность обновления но и большее колличество пакетов
+    private final double sendThreshold = Integer.MAX_VALUE;      // Переменная мат. шага по длинне вектора относительно начальной точки - меньше значнеие - большая плотность обновления но и большее колличество пакетов коль времени нет то хардкод на отсутсвтие истории с лищней нашгружкой на просчёт вектора
     private double lastSentX, lastSentY; // точка начала вектора
 
 
@@ -138,10 +138,13 @@ public class PaintingZoneManager {
         lastSentX = lastX;// задаём точку начала от которой считаем векторное растояние
         lastSentY = lastY;
 
-        // saving current action in 2 var-s for backtracking after packt distibution
-        fullAction = new DrawAction(selectedColor.toString(), brushSize, selectedTool);
-        fragmentAction = new DrawAction(selectedColor.toString(), brushSize, selectedTool);
+        String actionColor = (selectedTool == 'l')
+                ? defaultBCColor.toString()
+                : selectedColor.toString();
 
+        // saving current action in 2 var-s for backtracking after packt distibution
+        fullAction = new DrawAction(actionColor, brushSize, selectedTool);
+        fragmentAction = new DrawAction(actionColor, brushSize, selectedTool);
 
         fullAction.addPoint(lastX, lastY);
         fragmentAction.addPoint(lastX, lastY);
@@ -163,7 +166,7 @@ public class PaintingZoneManager {
             gc.setFill(selectedColor);
             gc.fillOval(x - brushSize/2, y - brushSize/2, brushSize, brushSize);
         } else if (selectedTool == 'l') {
-            gc.setFill(Color.WHITE); // поменять логику ластика
+            gc.setFill(defaultBCColor); // Используем цвет фона
             gc.fillOval(x - brushSize/2, y - brushSize/2, brushSize, brushSize);
         }
     }
@@ -211,12 +214,17 @@ public class PaintingZoneManager {
     private void drawLine(double startX, double startY, double endX, double endY) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setLineWidth(brushSize);
-        gc.setStroke(selectedColor);
+        if (selectedTool == 'l') {
+            gc.setStroke(defaultBCColor);
+        } else {
+            gc.setStroke(selectedColor);
+        }
 
         // Smoothing
         gc.setLineCap(StrokeLineCap.ROUND);
         gc.setLineJoin(StrokeLineJoin.ROUND);
 
+//        gc.strokeLine(startX, startY, endX, endY);
         gc.strokeLine(startX, startY, endX, endY);
     }
 
@@ -234,7 +242,9 @@ public class PaintingZoneManager {
      */
     public void setBrushColor(Color color) {
         this.selectedColor = color;
-        gc.setFill(selectedColor);
+        if (selectedTool == 'b') {
+            gc.setFill(selectedColor);
+        }
     }
 
     private void handleMouseReleased(MouseEvent event) {
@@ -276,22 +286,22 @@ public class PaintingZoneManager {
         }
     }
 
-    /**
-     * Setting up CTRL+Z hotkey
-     */
-    public void setupUndoHotkey() {
-        canvas.sceneProperty().addListener((observable, oldScene, newScene) -> {
-            if (newScene != null) {
-                newScene.setOnKeyPressed(event -> {
-                    if (event.isControlDown() && event.getCode().toString().equals("Z")) {
-                        undoLastAction( user.getNickname() );
-                        client.undo( user.getNickname() );
-                        System.out.println( "CTRL+Z" );
-                    }
-                });
-            }
-        });
-    }
+//    /**
+//     * Setting up CTRL+Z hotkey
+//     */
+//    public void setupUndoHotkey() {
+//        canvas.sceneProperty().addListener((observable, oldScene, newScene) -> {
+//            if (newScene != null) {
+//                newScene.setOnKeyPressed(event -> {
+//                    if (event.isControlDown() && event.getCode().toString().equals("Z")) {
+//                        undoLastAction( user.getNickname() );
+//                        client.undo( user.getNickname() );
+//                        System.out.println( "CTRL+Z" );
+//                    }
+//                });
+//            }
+//        });
+//    } deadline
 
     public void setSelectedTool(char t) {
         selectedTool = t;
@@ -317,4 +327,6 @@ public class PaintingZoneManager {
         this.client = client;
         this.user = user;
     }
+
+
 }

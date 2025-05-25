@@ -54,7 +54,7 @@
 
 <BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400" minWidth="500" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ooppr.ui.controllers.ProductController">
    <top>
-      <MenuBar style="-fx-background-color: #242424;" fx:id="menuBar" stylesheets="@productInterface.css" BorderPane.alignment="CENTER">
+      <MenuBar fx:id="menuBar" style="-fx-background-color: #242424;" stylesheets="@productInterface.css" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -130,14 +130,7 @@
             </VBox>
             <VBox maxHeight="1.7976931348623157E308" prefHeight="1080.0" prefWidth="100.0">
                <children>
-                  <HBox alignment="CENTER" prefHeight="49.0" prefWidth="100.0" style="-fx-background-color: #D4D4D4;">
-                     <children>
-                        <Text id="HistoryText" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: #242424;" text="History">
-                           <font>
-                              <Font size="24.0" />
-                           </font></Text>
-                     </children>
-                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="49.0" prefWidth="100.0" style="-fx-background-color: #D4D4D4;" />
                   <VBox id="HistoryContainer" maxWidth="1.7976931348623157E308" prefHeight="1080.0" style="-fx-background-color: #242424;" />
                </children>
             </VBox>

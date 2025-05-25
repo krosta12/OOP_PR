@@ -15,6 +15,22 @@ public class DrawAction implements Serializable {
     private final double brushSize;
     private final char toolType; // 'b' - brush, 'l' - eraser
 
+    public char getToolType() {
+        return toolType;
+    }
+
+    public double getBrushSize() {
+        return brushSize;
+    }
+
+    public String getColorWeb() {
+        return colorWeb;
+    }
+
+    public List<Point> getPoints() {
+        return points;
+    }
+
     public DrawAction(String colorWeb, double brushSize, char toolType) {
         this.colorWeb = colorWeb;
         this.brushSize = brushSize;

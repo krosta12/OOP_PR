@@ -84,7 +84,7 @@ public class ProductController implements Initializable, ClientEventListener, Dr
         paintingZoneManager.setCanvas( paintingZone );
         paintingZoneManager.setupZooming( paintingZoneScrollPane );
         paintingZoneManager.setupDrawing();
-        paintingZoneManager.setupUndoHotkey();
+//        paintingZoneManager.setupUndoHotkey();
 
         // Attaching buttons functionality
         ColorPickerManager colorPickerManager = new ColorPickerManager( paintingZoneManager );
