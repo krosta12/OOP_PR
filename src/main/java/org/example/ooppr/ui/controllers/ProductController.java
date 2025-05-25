@@ -223,6 +223,7 @@ public class ProductController implements Initializable, ClientEventListener, Dr
         alert.setTitle( "User exception" );
         alert.setHeaderText( null );
         alert.setContentText( e.getMessage() );
+        alert.getDialogPane().setGraphic(imageView);
         alert.showAndWait();
     }
 
@@ -281,8 +282,10 @@ public class ProductController implements Initializable, ClientEventListener, Dr
     @Override
     public void onUserRoleChanged(List<User> newUsersList) {
         for( User u : newUsersList ) {
-            if( u.getNickname().equals( user.getNickname() ) )
+            if( u.getNickname().equals( user.getNickname() ) ) {
                 user.setRole( u.getRole() );
+                System.out.println( user.getRole() );
+            }
         }
         Platform.runLater( () -> connectionsManager.setList( newUsersList ));
 
