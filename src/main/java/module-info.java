@@ -3,6 +3,7 @@ module org.example.ooppr {
     requires javafx.fxml;
     requires java.sql;
     requires javafx.graphics;
+    requires java.desktop;
 
 
     opens org.example.ooppr to javafx.fxml;
