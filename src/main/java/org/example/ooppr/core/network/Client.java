@@ -126,10 +126,8 @@ public class Client {
     }
 
     private void handleUserChangeRoleMessage( UserChangedRoleMessage userChangedRoleMessage ) {
-        for( User u : userChangedRoleMessage.getNewUsersList() ) {
-            System.out.println( "USER ROLE: " + u.getRole() );
-        }
-        listener.onNewUsersList( userChangedRoleMessage.getNewUsersList() );
+        listener.onUserRoleChanged( userChangedRoleMessage.getNewUsersList() );
+
     }
 
 

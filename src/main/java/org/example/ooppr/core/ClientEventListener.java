@@ -15,4 +15,6 @@ public interface ClientEventListener {
     void onUndo();
     void onNewUsersList( List<User> usersList );
     void onException( Exception e );
+
+    void onUserRoleChanged(List<User> newUsersList);
 }
