@@ -13,7 +13,7 @@ public class BanUserMessage extends Message{
         this.banner = banner;
     }
 
-    public User gerBanned() {
+    public User getBanned() {
         return this.banned;
     }
 

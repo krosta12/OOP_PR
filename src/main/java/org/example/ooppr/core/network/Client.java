@@ -74,6 +74,8 @@ public class Client {
                         handleKickUserMessage( kickUserMessage );
                     } else if ( data instanceof BanUserMessage banUserMessage ) {
                         handleBanUserMessage( banUserMessage );
+                    }  else if ( data instanceof UserChangedRoleMessage userChangedRoleMessage ) {
+                        handleUserChangeRoleMessage( userChangedRoleMessage );
                     }
                 }
             } catch (Exception e) {
@@ -120,7 +122,14 @@ public class Client {
     }
 
     private void handleBanUserMessage( BanUserMessage banUserMessage ) {
-        listener.onBan():
+        listener.onBan();
+    }
+
+    private void handleUserChangeRoleMessage( UserChangedRoleMessage userChangedRoleMessage ) {
+        for( User u : userChangedRoleMessage.getNewUsersList() ) {
+            System.out.println( "USER ROLE: " + u.getRole() );
+        }
+        listener.onNewUsersList( userChangedRoleMessage.getNewUsersList() );
     }
 
 
@@ -186,13 +195,23 @@ public class Client {
     }
 
     /**
-     * Nethods sends to server kick message. Also checks users priorities
+     * Methods sends to server ban message. Also checks users priorities
      * @param itemUser
      * @param productUser
      */
     public void banUser(User itemUser, User productUser) throws PriorityException {
         checkPriorities( itemUser, productUser, "ban" );
         sendBanMessage( itemUser, productUser );
+    }
+
+    /**
+     * Methods sends to server role changing message. Also checks users priorities
+     * @param itemUser
+     * @param newRole
+     */
+    public void changeUserRole(User itemUser, User productUser, User.Role newRole ) throws PriorityException {
+        checkPriorities( itemUser, productUser, "change role" );
+        sendChangeRoleMessage( itemUser, newRole );
     }
 
     private void checkPriorities( User itemUser, User productUser, String actionType ) throws PriorityException {
@@ -231,6 +250,16 @@ public class Client {
             out.flush();
         } catch ( IOException e ) {
             System.out.println( "[CLIENT] Error sending ban message: " + e.getMessage() );
+        }
+    }
+
+    private void sendChangeRoleMessage( User user, User.Role newRole ) {
+        try {
+            ChangeUserRoleMessage changeUserRoleMessage = new ChangeUserRoleMessage( user, newRole );
+            out.writeObject( changeUserRoleMessage );
+            out.flush();
+        } catch ( IOException e ) {
+            System.out.println( "[CLIENT] Error sending change role message" );
         }
     }
 
